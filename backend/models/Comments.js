@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from "@sequelize/core";
 const sequelize = new Sequelize();
-export const Comment = sequelize.define(
-  "Comment",
+export const Comments = sequelize.define(
+  "Comments",
   {
     id: {
       type: DataTypes.INTEGER,

@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from "@sequelize/core";
 const sequelize = new Sequelize();
-export const Like = sequelize.define(
-  "Like",
+export const Likes = sequelize.define(
+  "Likes",
   {
     id: {
       type: DataTypes.INTEGER,
