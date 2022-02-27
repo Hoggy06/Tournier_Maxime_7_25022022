@@ -6,8 +6,10 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import helmet from "helmet";
-import { database } from "./database.js";
+import { database } from "./config/database.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+import { userRoutes } from "./routes/user.js";
 
 //Utilisation d'express
 const app = express();
@@ -36,5 +38,8 @@ app.use(express.json());
 
 //Middleware pour le dossier images
 app.use("/images", express.static(path.join(__dirname, "images")));
+
+//Middleware pour l'authentification
+app.use("/api/auth", userRoutes);
 
 export default app;
