@@ -1,26 +1,26 @@
 import { Sequelize, DataTypes } from "@sequelize/core";
 const sequelize = new Sequelize();
-export const User = sequelize.define(
-  "User",
+export const Post = sequelize.define(
+  "Post",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    firstname: {
+    idAuthor: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    authorFirstname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastname: {
+    authorLastname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
+    message: {
       type: DataTypes.STRING,
       allowNull: false,
     },
