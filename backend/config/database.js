@@ -22,11 +22,17 @@ export function database() {
     }
   }
 
-  const usersModel = Users(sequelize, DataTypes);
-
-  sequelize
-    .sync({ force: true })
-    .then(() => console.log("Sync accomplished succesfully !"));
+  async function syncUsersModel() {
+    const usersModel = new Users(sequelize, DataTypes);
+    try {
+      await usersModel
+        .sync({ force: true })
+        .then(() => console.log("Sync accomplished succesfully !"));
+    } catch (error) {
+      console.error("Unable to sync data", error);
+    }
+  }
 
   connectToDatabase();
+  syncUsersModel();
 }
