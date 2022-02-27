@@ -1,5 +1,6 @@
 //Connexion à la bdd
-import { Sequelize } from "sequelize";
+import { Sequelize, DataTypes } from "sequelize";
+import { Users } from "../models/Users.js";
 export function database() {
   const sequelize = new Sequelize(
     process.env.DATABASE,
@@ -20,5 +21,12 @@ export function database() {
       console.error("Unable to connect to the database:", error);
     }
   }
+
+  const usersModel = Users(sequelize, DataTypes);
+
+  sequelize
+    .sync({ force: true })
+    .then(() => console.log("Sync accomplished succesfully !"));
+
   connectToDatabase();
 }
