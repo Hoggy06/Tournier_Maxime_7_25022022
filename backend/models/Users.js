@@ -1,7 +1,5 @@
-import { Sequelize, DataTypes } from "sequelize";
-const sequelize = new Sequelize();
-export function usersModel() {
-  return sequelize.define(
+module.exports = (sequelize, DataTypes) => {
+  const Users = sequelize.define(
     "Users",
     {
       id: {
@@ -31,8 +29,9 @@ export function usersModel() {
       },
     },
     {
-      createdAt: true,
-      updatedAt: true,
+      createdAt: "created",
+      updatedAt: "updated",
     }
   );
-}
+  return Users;
+};
