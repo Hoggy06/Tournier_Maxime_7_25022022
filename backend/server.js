@@ -1,6 +1,6 @@
-//Importation de http et de app
-import http from "http";
-import app from "./app.js";
+//constation de http et de app
+const http = require("http");
+const app = require("./app.js");
 
 //Fonction qui vérifie si le port est un nombre et supérieur à 0
 const normalizePort = (val) => {
