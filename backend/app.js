@@ -6,7 +6,8 @@ const path = require("path");
 const helmet = require("helmet");
 const { connectToDatabase, sync } = require("./config/database.js");
 
-const userRoutes = require("./routes/user.js");
+const authRoutes = require("./routes/auth.js");
+const usersRoutes = require("./routes/users.js");
 
 //Utilisation d'express
 const app = express();
@@ -38,6 +39,7 @@ app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 //Middleware pour l'authentification
-app.use("/api/auth", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", usersRoutes);
 
 module.exports = app;
