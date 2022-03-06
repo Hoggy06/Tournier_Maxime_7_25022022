@@ -15,14 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      authorFirstname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      authorLastname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       message: {
         type: DataTypes.STRING,
         allowNull: false,

@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      idUser: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       isAdmin: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
