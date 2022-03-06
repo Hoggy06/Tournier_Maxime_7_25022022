@@ -1,5 +1,5 @@
 //Importation de jsonwebtoken
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 //Exportation du module
 module.exports = (req, res, next) => {
   try {

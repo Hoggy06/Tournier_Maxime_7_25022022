@@ -1,11 +1,9 @@
-import express from "express";
-const userRoutes = express.Router();
+const express = require("express");
+const router = express.Router();
 
-//import { login, signup } from "../controllers/user.js";
+const userCtrl = require("../controllers/user.js");
 
-//Importation de la vérif du mot de passe
+router.post("/signup", userCtrl.signup);
+router.post("/login", userCtrl.login);
 
-/*userRoutes.post("/signup", signup);
-userRoutes.post("/login", login);*/
-
-export { userRoutes };
+module.exports = router;

@@ -1,15 +1,12 @@
-//Importation des dependances
-import dotenv from "dotenv";
+//constation des dependances
+const dotenv = require("dotenv");
 dotenv.config();
-import express from "express";
-import path from "path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import helmet from "helmet";
-import { database } from "./config/database.js";
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const express = require("express");
+const path = require("path");
+const helmet = require("helmet");
+const { connectToDatabase, sync } = require("./config/database.js");
 
-import { userRoutes } from "./routes/user.js";
+const userRoutes = require("./routes/user.js");
 
 //Utilisation d'express
 const app = express();
@@ -32,7 +29,8 @@ app.use((req, res, next) => {
   next();
 });
 
-database();
+connectToDatabase();
+sync();
 
 app.use(express.json());
 
@@ -42,4 +40,4 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 //Middleware pour l'authentification
 app.use("/api/auth", userRoutes);
 
-export default app;
+module.exports = app;
