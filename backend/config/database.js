@@ -38,7 +38,9 @@ function sync(err) {
   if (err) {
     console.log(err);
   } else {
-    sequelize.sync().then(() => console.log("Synchronization was successful"));
+    sequelize
+      .sync({ alter: true })
+      .then(() => console.log("Synchronization was successful"));
   }
 }
 
