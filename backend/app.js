@@ -8,6 +8,7 @@ const { connectToDatabase, sync } = require("./config/database.js");
 
 const authRoutes = require("./routes/auth.js");
 const usersRoutes = require("./routes/users.js");
+const postsRoutes = require("./routes/posts.js");
 
 //Utilisation d'express
 const app = express();
@@ -41,5 +42,6 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 //Middleware pour l'authentification
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/posts", postsRoutes);
 
 module.exports = app;
