@@ -1,22 +1,26 @@
+//Importation de multer
 const multer = require("multer");
 
+//Extensions valide pour les photos
 const MIME_TYPES = {
   "image/jpg": "jpg",
-  "image/jpeg": "jpg",
+  "image/jpeg": "jpeg",
   "image/png": "png",
 };
-
-//indication de l'endroit où enregistrer les fichiers entrants et sous quel nom
+//Dossier de destination
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    console.log(file);
     callback(null, "images");
   },
+  //Formats du fichiers dans son appelation
   filename: (req, file, callback) => {
-    const name = file.originalname.split(" ").join("_");
+    //On supprime l'extension de fichier
+    const name = file.originalname.slice(0, -4);
+    //On vérifie si l'extension est acceptée
     const extension = MIME_TYPES[file.mimetype];
-    callback(null, name + Date.now() + "." + extension);
+    //photo_date.extension
+    callback(null, name.concat("_") + Date.now() + "." + extension);
   },
 });
-
+//Exportation du module
 module.exports = multer({ storage: storage }).single("image");
