@@ -9,11 +9,6 @@ const jwt = require("jsonwebtoken");
 const schemaPassword = require("../models/passwordValidator.js");
 const User = require("../models/Users.js")(sequelize, DataTypes);
 const fs = require("fs");
-const {
-  decryptEmail,
-  encryptEmail,
-  EMAIL_CRYPTOJS_KEY,
-} = require("../middlewares/crypto.js");
 
 //Fonction signup
 exports.signup = (req, res, next) => {
@@ -21,27 +16,28 @@ exports.signup = (req, res, next) => {
     return res.status(400).send({
       message: `Le mot de passe doit contenir au moins : 8 caractères minimum, une majuscule, une minuscule, un chiffre, et aucun espace`,
     });
-  } else {
-    bcrypt
-      .hash(req.body.password, 10)
-      .then((hash) => {
-        User.create({
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
-          email: encryptEmail(req.body.email, EMAIL_CRYPTOJS_KEY),
-          password: hash,
-        })
-          .then(() => res.status(201).json({ message: "Utilisateur crée !" }))
-          .catch((error) => res.status(401).json({ error: error }));
-      })
-      .catch((error) => res.status(500).json({ error }));
   }
+  bcrypt
+    .hash(req.body.password, 10)
+    .then((hash) => {
+      User.create({
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        password: hash,
+      })
+        .then(() => res.status(201).json({ message: "Utilisateur crée !" }))
+        .catch(() => res.status(400).json({ error: "Email déjà utilisé" }));
+    })
+    .catch((error) => res.status(500).json({ error }));
 };
 
 //Fonction login
 exports.login = (req, res, next) => {
   //Recherche de User dans la bdd
-  User.findOne({ email: encryptEmail(req.body.email, EMAIL_CRYPTOJS_KEY) })
+  User.findOne({
+    where: { email: req.body.email },
+  })
     //Si non trouvé 401
     .then((user) => {
       if (!user) {
@@ -62,7 +58,7 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             userId: user.id,
             token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, {
-              expiresIn: "4h",
+              expiresIn: "24h",
             }),
           });
         })
