@@ -3,8 +3,11 @@ dotenv.config();
 const { Sequelize, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database.js");
 const Posts = require("../models/Posts.js")(sequelize, DataTypes);
+const Users = require("../models/Users.js")(sequelize, DataTypes);
 const fs = require("fs");
 exports.createPost = (req, res, next) => {
+  Posts.belongsTo(Users);
+  Users.hasMany(Posts);
   const postObject = req.file
     ? {
         message: req.body.message,
@@ -17,9 +20,15 @@ exports.createPost = (req, res, next) => {
   Posts.create({
     ...postObject,
     userId: req.auth.userId,
+  });
+  Posts.findAll({
+    include: {
+      model: Users,
+      attributes: ["firstname", "avatar"],
+    },
   })
-    .then(() => {
-      res.status(200).json({ message: "Post crée" });
+    .then((post) => {
+      res.status(200).json({ post });
     })
     .catch((error) => {
       res.status(400).json({ error });
@@ -27,10 +36,16 @@ exports.createPost = (req, res, next) => {
 };
 
 exports.getAllPosts = (req, res, next) => {
+  Posts.belongsTo(Users);
+  Users.hasMany(Posts);
   const options = {
     limit: 10,
     order: [["id", "DESC"]],
     attributes: ["id", "message", "image", "userId", "created"],
+    include: {
+      model: Users,
+      attributes: ["firstname", "avatar"],
+    },
   };
   Posts.findAll(options)
     .then((posts) => {
@@ -42,9 +57,15 @@ exports.getAllPosts = (req, res, next) => {
 };
 
 exports.getOnePost = (req, res, next) => {
+  Posts.belongsTo(Users);
+  Users.hasMany(Posts);
   const options = {
     where: { id: req.params.id },
     attributes: ["id", "message", "image", "userId", "created"],
+    include: {
+      model: Users,
+      attributes: ["firstname", "avatar"],
+    },
   };
   Posts.findOne(options)
     .then((post) => {

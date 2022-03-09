@@ -3,6 +3,8 @@ dotenv.config();
 const { Sequelize, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database.js");
 const Users = require("../models/Users.js")(sequelize, DataTypes);
+const Posts = require("../models/Posts.js")(sequelize, DataTypes);
+const Comments = require("../models/Comments.js")(sequelize, DataTypes);
 const fs = require("fs");
 
 exports.editUser = (req, res, next) => {
@@ -35,9 +37,23 @@ exports.editUser = (req, res, next) => {
 };
 
 exports.getOneUser = (req, res, next) => {
+  Posts.belongsTo(Users);
+  Comments.belongsTo(Users);
+  Users.hasMany(Posts);
+  Users.hasMany(Comments);
   const options = {
     where: { id: req.params.id },
     attributes: ["id", "firstname", "lastname", "avatar", "created"],
+    include: [
+      {
+        model: Posts,
+        attributes: ["id", "message", "image", "created", "updated"],
+      },
+      {
+        model: Comments,
+        attributes: ["id", "postId", "message", "created", "updated"],
+      },
+    ],
   };
   Users.findOne(options)
     .then((user) => {
@@ -49,10 +65,24 @@ exports.getOneUser = (req, res, next) => {
 };
 
 exports.getAllUsers = (req, res, next) => {
+  Posts.belongsTo(Users);
+  Comments.belongsTo(Users);
+  Users.hasMany(Posts);
+  Users.hasMany(Comments);
   const options = {
     limit: 10,
     order: [["id", "DESC"]],
     attributes: ["id", "firstname", "lastname", "avatar", "created"],
+    include: [
+      {
+        model: Posts,
+        attributes: ["id", "message", "image", "created", "updated"],
+      },
+      {
+        model: Comments,
+        attributes: ["id", "postId", "message", "created", "updated"],
+      },
+    ],
   };
 
   Users.findAll(options)

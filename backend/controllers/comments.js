@@ -2,22 +2,23 @@ const dotenv = require("dotenv");
 dotenv.config();
 const { Sequelize, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database.js");
-const Posts = require("../models/Posts.js")(sequelize, DataTypes);
+const Users = require("../models/Users.js")(sequelize, DataTypes);
 const Comments = require("../models/Comments.js")(sequelize, DataTypes);
 exports.createComment = (req, res, next) => {
+  Comments.belongsTo(Users);
+  Users.hasMany(Comments);
   Comments.create({
     message: req.body.message,
     postId: req.params.postId,
     userId: req.auth.userId,
+  });
+  Comments.findAll({
+    include: {
+      model: Users,
+      attributes: ["firstname", "avatar"],
+    },
   })
     .then((comment) => {
-      Comments.findAll({
-        where: { id: comment.id },
-        include: [
-          { model: Posts, where: { id: req.params.postId }, required: false },
-        ],
-      });
-
       res.status(201).json({ comment });
     })
     .catch((error) => {
@@ -27,10 +28,16 @@ exports.createComment = (req, res, next) => {
 };
 
 exports.getAllComments = (req, res, next) => {
+  Comments.belongsTo(Users);
+  Users.hasMany(Comments);
   const options = {
     limit: 10,
     order: [["id", "DESC"]],
     attributes: ["id", "userId", "postId", "message", "created"],
+    include: {
+      model: Users,
+      attributes: ["firstname", "avatar"],
+    },
   };
   Comments.findAll(options)
     .then((comments) => {
@@ -44,9 +51,15 @@ exports.getAllComments = (req, res, next) => {
 };
 
 exports.getOneComment = (req, res, next) => {
+  Comments.belongsTo(Users);
+  Users.hasMany(Comments);
   const options = {
     where: { postId: req.params.postId },
     attributes: ["id", "userId", "postId", "message", "created"],
+    include: {
+      model: Users,
+      attributes: ["firstname", "avatar"],
+    },
   };
   Comments.findOne(options)
     .then((comment) => {
