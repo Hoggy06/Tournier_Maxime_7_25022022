@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      idUser: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       createdAt: "created",
+      updatedAt: false,
     }
   );
   return Roles;
