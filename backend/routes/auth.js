@@ -8,5 +8,6 @@ const multer = require("../middlewares/multer-config.js");
 
 router.post("/signup", userCtrl.signup);
 router.post("/login", userCtrl.login);
+router.get("/logout", userCtrl.logout);
 
 module.exports = router;
