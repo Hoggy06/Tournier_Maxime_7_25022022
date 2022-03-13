@@ -25,6 +25,7 @@ exports.signup = (req, res, next) => {
         lastname: req.body.lastname,
         email: req.body.email,
         password: hash,
+        isAdmin: false,
       })
         .then(() => res.status(201).json({ message: "Utilisateur crée !" }))
         .catch(() => res.status(400).json({ error: "Email déjà utilisé" }));
@@ -54,16 +55,30 @@ exports.login = (req, res, next) => {
               .status(401)
               .send({ message: `Adresse mail ou mot de passe incorrect` });
           }
-          //sinon 200 + création d'un token valable 24h
+          //sinon 200 + création d'un token valable 1 semaine
+          const maxAge = 1 * (168 * 60 * 60 * 1000);
+          /*const token = jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, {
+            expiresIn: maxAge,
+          });*/
+          //res.cookie("cookie", token);
           res.status(200).json({
             userId: user.id,
-            token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, {
-              expiresIn: "24h",
-            }),
+            token: jwt.sign(
+              { userId: user.id, isAdmin: user.isAdmin },
+              process.env.TOKEN_KEY,
+              {
+                expiresIn: maxAge,
+              }
+            ),
           });
         })
         .catch((error) => res.status(500).json({ error }));
     })
     //Gestion de l'erreur en 500 (server response)
     .catch((error) => res.status(500).json({ error }));
+};
+
+exports.logout = (req, res) => {
+  res.clearCookie("cookie");
+  res.status(200).json("LOGOUT");
 };
