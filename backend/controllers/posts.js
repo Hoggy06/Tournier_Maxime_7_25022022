@@ -1,13 +1,19 @@
 const dotenv = require("dotenv");
 dotenv.config();
+const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database.js");
 const Posts = require("../models/Posts.js")(sequelize, DataTypes);
 const Users = require("../models/Users.js")(sequelize, DataTypes);
 const fs = require("fs");
+
+//Création d'un post
 exports.createPost = (req, res, next) => {
+  //Jointure des tables Users et Posts
   Posts.belongsTo(Users);
   Users.hasMany(Posts);
+
+  //Si l'utilisateur décide d'importer un image
   const postObject = req.file
     ? {
         message: req.body.message,
@@ -16,28 +22,25 @@ exports.createPost = (req, res, next) => {
         }`,
       }
     : { ...req.body };
-
+  //Création
   Posts.create({
     ...postObject,
     userId: req.auth.userId,
-  });
-  Posts.findAll({
-    include: {
-      model: Users,
-      attributes: ["firstname", "avatar"],
-    },
   })
-    .then((post) => {
-      res.status(200).json({ post });
+    //On joint les datas de Users
+    .then(() => {
+      res.status(200).json({ message: "Post crée" });
     })
     .catch((error) => {
       res.status(400).json({ error });
     });
 };
-
+//Récupère tous les posts
 exports.getAllPosts = (req, res, next) => {
+  //Jointure des tables Users et Posts
   Posts.belongsTo(Users);
   Users.hasMany(Posts);
+  //Utilisation des datas Posts et Users
   const options = {
     limit: 10,
     order: [["id", "DESC"]],
@@ -55,10 +58,13 @@ exports.getAllPosts = (req, res, next) => {
       res.status(404).json({ error: "Impossible de retrouver les posts" });
     });
 };
-
+//Récupération d'un post
 exports.getOnePost = (req, res, next) => {
+  //Jointure des tables Users et Posts
   Posts.belongsTo(Users);
   Users.hasMany(Posts);
+
+  //Utilisation des datas Posts et Users
   const options = {
     where: { id: req.params.id },
     attributes: ["id", "message", "image", "userId", "created"],
@@ -76,12 +82,15 @@ exports.getOnePost = (req, res, next) => {
     });
 };
 
+//Edition d'un post
 exports.editPost = (req, res, next) => {
   Posts.findOne({ where: { id: req.params.id } })
     .then((post) => {
+      //L'utilisateur doit etre l'auteur du post pour modifier
       if (post.userId !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
       }
+      //Si ajout d'un fichier
       const postObject = req.file
         ? {
             message: req.body.message,
@@ -90,6 +99,7 @@ exports.editPost = (req, res, next) => {
             }`,
           }
         : { ...req.body };
+      //Maj du post
       post
         .update({ ...postObject, id: req.params.id })
         .then(() => res.status(200).json({ message: "Post modifié" }));
@@ -100,17 +110,29 @@ exports.editPost = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
-  Posts.findOne({ where: { id: req.params.id } })
+  Posts.belongsTo(Users);
+  Users.hasMany(Posts);
+
+  //Utilisation des datas Posts et Users
+  const options = {
+    where: { id: req.params.id },
+    include: {
+      model: Users,
+    },
+  };
+  Posts.findOne(options)
     .then((post) => {
-      if (post.userId !== req.auth.userId) {
+      //L'utilisateur doit etre l'auteur du post pour supprimer
+      if (post.userId !== req.auth.userId && req.auth.isAdmin === false) {
         return res.status(403).json({ error: "Accès non autorisé" });
-      } else {
-        const filename = post.image.split("/images/")[1];
-        fs.unlink(`images/${filename}`, () => {
-          post.destroy();
-          res.status(200).json({ message: "Post supprimé" });
-        });
       }
+      //Suppression de l'image dans le dossier images
+      //const filename = post.image.split("/images/")[1];
+      //fs.unlink(`images/${filename}`, () => {
+      //Suppression du post
+      post.destroy();
+      res.status(200).json({ message: "Post supprimé" });
+      //});
     })
     .catch(() => {
       res.status(404).json({ error: "Post non trouvé" });

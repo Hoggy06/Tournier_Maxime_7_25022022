@@ -18,6 +18,7 @@ exports.editUser = (req, res, next) => {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email: req.body.email,
+            //bcrypt
             password: req.body.password,
             avatar: `${req.protocol}://${req.get("host")}/images/${
               req.file.filename
@@ -100,6 +101,7 @@ exports.deleteOneUser = (req, res, next) => {
       if (user.id !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
       } else {
+        //fichiers image fs unlink
         user.destroy();
         res.status(200).json({ message: "Compte supprimé" });
       }
