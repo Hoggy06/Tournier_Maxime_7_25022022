@@ -4,32 +4,33 @@ const { Sequelize, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database.js");
 const Users = require("../models/Users.js")(sequelize, DataTypes);
 const Comments = require("../models/Comments.js")(sequelize, DataTypes);
+
+//Création de commentaire
 exports.createComment = (req, res, next) => {
+  //Jointure de Comments et Users
   Comments.belongsTo(Users);
   Users.hasMany(Comments);
+  //Création des objets
   Comments.create({
     message: req.body.message,
     postId: req.params.postId,
     userId: req.auth.userId,
-  });
-  Comments.findAll({
-    include: {
-      model: Users,
-      attributes: ["firstname", "avatar"],
-    },
   })
-    .then((comment) => {
-      res.status(201).json({ comment });
+    //Recherche du firstname et de l'avatar dans Users
+    .then(() => {
+      res.status(201).json({ message: "Commentaire crée" });
     })
     .catch((error) => {
       console.log(error);
       res.status(400).json({ error });
     });
 };
-
+//Récupération de tous les commentaires d'un membres
 exports.getAllComments = (req, res, next) => {
+  //Jointure de Comments et Users
   Comments.belongsTo(Users);
   Users.hasMany(Comments);
+  //Data qui seront retournées
   const options = {
     limit: 10,
     order: [["id", "DESC"]],
@@ -39,6 +40,7 @@ exports.getAllComments = (req, res, next) => {
       attributes: ["firstname", "avatar"],
     },
   };
+  //Récupération des commentaires
   Comments.findAll(options)
     .then((comments) => {
       res.status(200).json(comments);
@@ -49,10 +51,12 @@ exports.getAllComments = (req, res, next) => {
         .json({ error: "Impossible de retrouver les commentaires" });
     });
 };
-
+//Récupération d'un commentaire
 exports.getOneComment = (req, res, next) => {
+  //Jointure de Comments et Users
   Comments.belongsTo(Users);
   Users.hasMany(Comments);
+  //Data qui seront retournées
   const options = {
     where: { postId: req.params.postId },
     attributes: ["id", "userId", "postId", "message", "created"],
@@ -69,13 +73,15 @@ exports.getOneComment = (req, res, next) => {
       res.status(404).json({ error: "Commentaire non trouvé" });
     });
 };
-
+//Edition d'un commentaire
 exports.editComment = (req, res, next) => {
   Comments.findOne({ where: { id: req.params.id } })
     .then((comment) => {
+      //Si l'utilisateur n'est pas l'auteur du commentaire = 403
       if (comment.userId !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
       }
+      //Maj du commentaire
       comment
         .update({ message: req.body.message, id: req.params.id })
         .then(() => res.status(200).json({ message: "Commentaire modifié" }));
@@ -84,11 +90,12 @@ exports.editComment = (req, res, next) => {
       res.status(400).json({ error });
     });
 };
-
+//Suppresion du commentaire
 exports.deleteComment = (req, res, next) => {
   Comments.findOne({ where: { id: req.params.id } })
     .then((comment) => {
-      if (comment.userId !== req.auth.userId) {
+      //Si l'utilisateur n'est pas l'auteur du commentaire = 403
+      if (comment.userId !== req.auth.userId && req.auth.isAdmin === false) {
         return res.status(403).json({ error: "Accès non autorisé" });
       } else {
         comment.destroy();
@@ -96,6 +103,6 @@ exports.deleteComment = (req, res, next) => {
       }
     })
     .catch(() => {
-      res.status(404).json({ error: "Post non trouvé" });
+      res.status(404).json({ error: "Commentaire non trouvé" });
     });
 };
