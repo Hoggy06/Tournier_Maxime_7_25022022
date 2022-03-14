@@ -18,7 +18,6 @@ exports.editUser = (req, res, next) => {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email: req.body.email,
-            //bcrypt
             password: req.body.password,
             avatar: `${req.protocol}://${req.get("host")}/images/${
               req.file.filename
@@ -98,7 +97,7 @@ exports.getAllUsers = (req, res, next) => {
 exports.deleteOneUser = (req, res, next) => {
   Users.findOne({ where: { id: req.params.id } })
     .then((user) => {
-      if (user.id !== req.auth.userId) {
+      if (user.id !== req.auth.userId && req.auth.isAdmin === false) {
         return res.status(403).json({ error: "Accès non autorisé" });
       } else {
         //fichiers image fs unlink
