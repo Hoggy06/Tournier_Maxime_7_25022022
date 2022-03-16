@@ -5,7 +5,11 @@ const { sequelize } = require("../config/database.js");
 const Users = require("../models/Users.js")(sequelize, DataTypes);
 const Posts = require("../models/Posts.js")(sequelize, DataTypes);
 const Comments = require("../models/Comments.js")(sequelize, DataTypes);
+const Likes = require("../models/Likes.js")(sequelize, DataTypes);
+const bcrypt = require("bcrypt");
 const fs = require("fs");
+const { encryptEmail } = require("../middlewares/crypto.js");
+const schemaPassword = require("../models/passwordValidator.js");
 
 exports.editUser = (req, res, next) => {
   Users.findOne({ where: { id: req.params.id } })
@@ -13,17 +17,21 @@ exports.editUser = (req, res, next) => {
       if (user.id !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
       }
+
       const userObject = req.file
         ? {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
-            email: req.body.email,
-            password: req.body.password,
-            avatar: `${req.protocol}://${req.get("host")}/images/${
+            email: encryptEmail(req.body.email),
+            image: `${req.protocol}://${req.get("host")}/images/${
               req.file.filename
             }`,
           }
-        : { ...req.body };
+        : {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            email: encryptEmail(req.body.email),
+          };
       user
         .update({
           ...userObject,
@@ -39,11 +47,13 @@ exports.editUser = (req, res, next) => {
 exports.getOneUser = (req, res, next) => {
   Posts.belongsTo(Users);
   Comments.belongsTo(Users);
+  Likes.belongsTo(Users);
   Users.hasMany(Posts);
   Users.hasMany(Comments);
+  Users.hasMany(Likes);
   const options = {
     where: { id: req.params.id },
-    attributes: ["id", "firstname", "lastname", "avatar", "created"],
+    attributes: ["id", "firstname", "lastname", "image", "created"],
     include: [
       {
         model: Posts,
@@ -52,6 +62,10 @@ exports.getOneUser = (req, res, next) => {
       {
         model: Comments,
         attributes: ["id", "postId", "message", "created", "updated"],
+      },
+      {
+        model: Likes,
+        attributes: ["id", "userId", "postId", "isLike", "created"],
       },
     ],
   };
@@ -67,12 +81,14 @@ exports.getOneUser = (req, res, next) => {
 exports.getAllUsers = (req, res, next) => {
   Posts.belongsTo(Users);
   Comments.belongsTo(Users);
+  Likes.belongsTo(Users);
   Users.hasMany(Posts);
   Users.hasMany(Comments);
+  Users.hasMany(Likes);
   const options = {
     limit: 10,
     order: [["id", "DESC"]],
-    attributes: ["id", "firstname", "lastname", "avatar", "created"],
+    attributes: ["id", "firstname", "lastname", "image", "created"],
     include: [
       {
         model: Posts,
@@ -81,6 +97,10 @@ exports.getAllUsers = (req, res, next) => {
       {
         model: Comments,
         attributes: ["id", "postId", "message", "created", "updated"],
+      },
+      {
+        model: Likes,
+        attributes: ["id", "userId", "postId", "isLike", "created"],
       },
     ],
   };
@@ -95,17 +115,31 @@ exports.getAllUsers = (req, res, next) => {
 };
 
 exports.deleteOneUser = (req, res, next) => {
-  Users.findOne({ where: { id: req.params.id } })
-    .then((user) => {
-      if (user.id !== req.auth.userId && req.auth.isAdmin === false) {
-        return res.status(403).json({ error: "Accès non autorisé" });
-      } else {
-        //fichiers image fs unlink
-        user.destroy();
-        res.status(200).json({ message: "Compte supprimé" });
-      }
-    })
-    .catch(() => {
-      res.status(404).json({ error: "Utilisateur non trouvé" });
-    });
+  Likes.destroy({ where: { userId: req.params.id } })
+    .then(() =>
+      Comments.destroy({ where: { userId: req.params.id } }).then(() =>
+        Posts.findAll({ where: { userId: req.params.id } })
+          .then((posts) => {
+            posts.forEach((post) => {
+              Comments.destroy({ where: { postId: post.id } });
+              Likes.destroy({ where: { postId: post.id } });
+              const filename = post.image;
+              fs.unlink(`images/${filename}`, () => {
+                Posts.destroy({ where: { id: post.id } });
+              });
+            });
+          })
+          .then(() =>
+            Users.findOne({ where: { id: req.params.id } }).then((user) => {
+              const filename = user.image;
+              fs.unlink(`images/${filename}`, () => {
+                Users.destroy({ where: { id: req.params.id } }).then(() =>
+                  res.status(200).json({ message: "Compte supprimé !" })
+                );
+              });
+            })
+          )
+      )
+    )
+    .catch((error) => res.status(400).json({ error }));
 };
