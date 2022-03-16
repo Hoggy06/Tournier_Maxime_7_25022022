@@ -18,11 +18,6 @@ exports.createLike = async (req, res) => {
     });
 
     if (alreadyLiked) {
-      if (!alreadyLiked.isLike) {
-        await alreadyLiked.update({ isLike: true });
-        return res.status(201).json({ like: "Like ajouté" });
-      }
-
       await alreadyLiked.destroy();
       res.status(201).send({ like: "Like enlevé" });
     } else {
