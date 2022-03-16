@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const schemaPassword = require("../models/passwordValidator.js");
 const User = require("../models/Users.js")(sequelize, DataTypes);
 const fs = require("fs");
+const { encryptEmail } = require("../middlewares/crypto.js");
 
 //Fonction signup
 exports.signup = (req, res, next) => {
@@ -17,13 +18,14 @@ exports.signup = (req, res, next) => {
       message: `Le mot de passe doit contenir au moins : 8 caractères minimum, une majuscule, une minuscule, un chiffre, et aucun espace`,
     });
   }
+
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
       User.create({
         firstname: req.body.firstname,
         lastname: req.body.lastname,
-        email: req.body.email,
+        email: encryptEmail(req.body.email),
         password: hash,
         isAdmin: false,
       })
@@ -37,14 +39,13 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
   //Recherche de User dans la bdd
   User.findOne({
-    where: { email: req.body.email },
+    where: { email: encryptEmail(req.body.email) },
   })
     //Si non trouvé 401
     .then((user) => {
       if (!user) {
         return res.status(401).send({ message: `Utilisateur non trouvé` });
       }
-
       //Utilisation de bcrypt pour la comparaison du mot de passe
       bcrypt
         .compare(req.body.password, user.password)
@@ -57,10 +58,6 @@ exports.login = (req, res, next) => {
           }
           //sinon 200 + création d'un token valable 1 semaine
           const maxAge = 1 * (168 * 60 * 60 * 1000);
-          /*const token = jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, {
-            expiresIn: maxAge,
-          });*/
-          //res.cookie("cookie", token);
           res.status(200).json({
             userId: user.id,
             token: jwt.sign(
@@ -76,9 +73,4 @@ exports.login = (req, res, next) => {
     })
     //Gestion de l'erreur en 500 (server response)
     .catch((error) => res.status(500).json({ error }));
-};
-
-exports.logout = (req, res) => {
-  res.clearCookie("cookie");
-  res.status(200).json("LOGOUT");
 };
