@@ -62,7 +62,7 @@ exports.getOneComment = (req, res, next) => {
     attributes: ["id", "userId", "postId", "message", "created"],
     include: {
       model: Users,
-      attributes: ["firstname", "avatar"],
+      attributes: ["firstname", "image"],
     },
   };
   Comments.findOne(options)
