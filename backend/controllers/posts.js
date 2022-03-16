@@ -1,6 +1,5 @@
 const dotenv = require("dotenv");
 dotenv.config();
-const jwt = require("jsonwebtoken");
 const { Sequelize, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database.js");
 const Posts = require("../models/Posts.js")(sequelize, DataTypes);
@@ -70,7 +69,7 @@ exports.getOnePost = (req, res, next) => {
     attributes: ["id", "message", "image", "userId", "created"],
     include: {
       model: Users,
-      attributes: ["firstname", "avatar"],
+      attributes: ["firstname", "image"],
     },
   };
   Posts.findOne(options)
@@ -127,12 +126,12 @@ exports.deletePost = (req, res, next) => {
         return res.status(403).json({ error: "Accès non autorisé" });
       }
       //Suppression de l'image dans le dossier images
-      //const filename = post.image.split("/images/")[1];
-      //fs.unlink(`images/${filename}`, () => {
-      //Suppression du post
-      post.destroy();
-      res.status(200).json({ message: "Post supprimé" });
-      //});
+      const filename = post.image.split("/images/")[1];
+      fs.unlink(`images/${filename}`, () => {
+        //Suppression du post
+        post.destroy();
+        res.status(200).json({ message: "Post supprimé" });
+      });
     })
     .catch(() => {
       res.status(404).json({ error: "Post non trouvé" });
