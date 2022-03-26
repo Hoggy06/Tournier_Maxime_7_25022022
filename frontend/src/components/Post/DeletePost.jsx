@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "react-bulma-components";
+import { useNavigate } from "react-router-dom";
 
 export default function DeletePost(props) {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [deletePost, setDeletePost] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,7 +19,11 @@ export default function DeletePost(props) {
     };
     fetch(`http://localhost:3307/api/posts/${props.idPost}`, options)
       .then((response) => response.json())
-      .then((res) => console.log(res))
+      .then((res) => {
+        if (res.message) {
+          navigate("/feeds");
+        }
+      })
       .catch((error) => console.log(error));
     setDeletePost(!deletePost);
   };
@@ -29,7 +35,7 @@ export default function DeletePost(props) {
       },
     })
       .then((response) => response.json())
-      .then((res) => console.log(res))
+      .then((res) => setDeletePost(res))
       .catch((error) => console.log(error));
   }, [token, deletePost]);
   return <Button onClick={handleSubmit} className="delete"></Button>;
