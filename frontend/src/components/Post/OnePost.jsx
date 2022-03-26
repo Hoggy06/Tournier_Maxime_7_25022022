@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Media, Image, Box, Content } from "react-bulma-components";
 import moment from "moment";
 import DeletePost from "./DeletePost";
+import LikePost from "./LikePost";
 export default function OnePost() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
@@ -27,7 +28,11 @@ export default function OnePost() {
     <Box>
       <Media>
         <Media.Item renderAs="article" align="left">
-          {data.User && <Image size={64} alt="64x64" src={data.User.image} />}
+          {data.User && (
+            <Link to={`/user/${data.userId}`}>
+              <Image size={64} alt="64x64" src={data.User.image} />
+            </Link>
+          )}
         </Media.Item>
         <Media.Item>
           <Content>
@@ -39,27 +44,22 @@ export default function OnePost() {
               <br />
               {data.message}
               <br />
-              {data.image ? <img src={data.image} alt={`${data.image}`} /> : ""}
+              {data.image ? (
+                <Image src={data.image} alt={`${data.image}`} />
+              ) : null}
             </p>
             <nav className="level is-mobile">
               <div className="level-left">
-                <a className="level-item" href="#!">
-                  <span
-                    data-tooltip="Liker"
-                    className="icon is-small level-item has-tooltip-bottom"
-                  >
-                    <FontAwesomeIcon icon={faHeart} />
-                  </span>
-                </a>
+                <LikePost idPost={data.id} />
                 {userConnected.userId === data.userId ? (
-                  <a className="level-item" href={`/editPost/${data.id}`}>
+                  <Link className="level-item" to={`/editPost/${data.id}`}>
                     <span
                       data-tooltip="Editer"
                       className="icon is-small level-item has-tooltip-bottom"
                     >
                       <FontAwesomeIcon icon={faPen} />
                     </span>
-                  </a>
+                  </Link>
                 ) : null}
               </div>
             </nav>
