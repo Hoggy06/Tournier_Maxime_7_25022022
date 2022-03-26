@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import moment from "moment";
 import DeleteComment from "./DeleteComment";
 import { Media, Image, Box, Content } from "react-bulma-components";
@@ -30,7 +30,11 @@ export default function Comments() {
       <Box key={index}>
         <Media>
           <Media.Item renderAs="article" align="left">
-            {i.User && <Image size={64} alt="64x64" src={i.User.image} />}
+            {i.User && (
+              <Link to={`/user/${i.userId}`}>
+                <Image size={64} alt="64x64" src={i.User.image} />
+              </Link>
+            )}
           </Media.Item>
           <Media.Item>
             <Content>
@@ -42,14 +46,14 @@ export default function Comments() {
                 <br />
                 {i.message}
                 <br />
-                {i.image ? <img src={i.image} alt={`${i.image}`} /> : ""}
+                {i.image ? <Image src={i.image} alt={`${i.image}`} /> : null}
               </p>
               <nav className="level is-mobile">
                 <div className="level-left">
                   {userConnected.userId === i.userId ? (
-                    <a
+                    <Link
                       className="level-item"
-                      href={`/editComment/${i.id}/post/${id}`}
+                      to={`/editComment/${i.id}/post/${id}`}
                     >
                       <span
                         data-tooltip="Editer"
@@ -57,7 +61,7 @@ export default function Comments() {
                       >
                         <FontAwesomeIcon icon={faPen} />
                       </span>
-                    </a>
+                    </Link>
                   ) : null}
                 </div>
               </nav>
