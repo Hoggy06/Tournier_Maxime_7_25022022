@@ -53,7 +53,7 @@ exports.getOneUser = (req, res, next) => {
   Users.hasMany(Likes);
   const options = {
     where: { id: req.params.id },
-    attributes: ["id", "firstname", "lastname", "image", "created"],
+    attributes: ["id", "firstname", "lastname", "image", "isAdmin", "created"],
     include: [
       {
         model: Posts,
@@ -87,7 +87,7 @@ exports.getAllUsers = (req, res, next) => {
   Users.hasMany(Likes);
   const options = {
     order: [["id", "DESC"]],
-    attributes: ["id", "firstname", "lastname", "image", "created"],
+    attributes: ["id", "firstname", "lastname", "image", "isAdmin", "created"],
     include: [
       {
         model: Posts,
