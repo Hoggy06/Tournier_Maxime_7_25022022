@@ -18,7 +18,7 @@ router.post("/:postId/comment", auth, commentsCtrl.createComment);
 router.get("/:postId/comment/:id", auth, commentsCtrl.getOneComment);
 router.get("/:postId/comments", auth, commentsCtrl.getAllComments);
 router.put("/:postId/comment/:id", auth, commentsCtrl.editComment);
-router.delete("/:postId/comment/:id", auth, commentsCtrl.deleteComment);
+router.delete("/comment/:id", auth, commentsCtrl.deleteComment);
 
 router.post("/:postId/like", auth, likesCtrl.createLike);
 router.get("/:postId/like/:likeId", auth, likesCtrl.getOneLike);
