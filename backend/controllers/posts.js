@@ -4,6 +4,8 @@ const { Sequelize, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database.js");
 const Posts = require("../models/Posts.js")(sequelize, DataTypes);
 const Users = require("../models/Users.js")(sequelize, DataTypes);
+const Comments = require("../models/Comments.js")(sequelize, DataTypes);
+const Likes = require("../models/Likes.js")(sequelize, DataTypes);
 const fs = require("fs");
 
 //Création d'un post
@@ -41,12 +43,11 @@ exports.getAllPosts = (req, res, next) => {
   Users.hasMany(Posts);
   //Utilisation des datas Posts et Users
   const options = {
-    limit: 10,
     order: [["id", "DESC"]],
     attributes: ["id", "message", "image", "userId", "created"],
     include: {
       model: Users,
-      attributes: ["firstname", "avatar"],
+      attributes: ["firstname", "image"],
     },
   };
   Posts.findAll(options)
@@ -99,9 +100,19 @@ exports.editPost = (req, res, next) => {
           }
         : { ...req.body };
       //Maj du post
-      post
-        .update({ ...postObject, id: req.params.id })
-        .then(() => res.status(200).json({ message: "Post modifié" }));
+      if (post.image) {
+        const filename = post.image.split("/images/")[1];
+        fs.unlink(`images/${filename}`, () => {
+          //Suppression du post
+          post
+            .update({ ...postObject, id: req.params.id })
+            .then(() => res.status(200).json({ message: "Post modifié" }));
+        });
+      } else {
+        post
+          .update({ ...postObject, id: req.params.id })
+          .then(() => res.status(200).json({ message: "Post modifié" }));
+      }
     })
     .catch((error) => {
       res.status(400).json({ error });
@@ -109,31 +120,32 @@ exports.editPost = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
-  Posts.belongsTo(Users);
-  Users.hasMany(Posts);
-
-  //Utilisation des datas Posts et Users
-  const options = {
-    where: { id: req.params.id },
-    include: {
-      model: Users,
-    },
-  };
-  Posts.findOne(options)
-    .then((post) => {
-      //L'utilisateur doit etre l'auteur du post pour supprimer
-      if (post.userId !== req.auth.userId && req.auth.isAdmin === false) {
-        return res.status(403).json({ error: "Accès non autorisé" });
-      }
-      //Suppression de l'image dans le dossier images
-      const filename = post.image.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
-        //Suppression du post
-        post.destroy();
-        res.status(200).json({ message: "Post supprimé" });
+  Likes.destroy({ where: { postId: req.params.id } })
+    .then(() => {
+      Comments.destroy({ where: { postId: req.params.id } }).then(() => {
+        Posts.findOne({ where: { id: req.params.id } })
+          .then((post) => {
+            //L'utilisateur doit etre l'auteur du post pour supprimer
+            if (post.userId !== req.auth.userId && req.auth.isAdmin === false) {
+              return res.status(403).json({ error: "Accès non autorisé" });
+            }
+            //Suppression de l'image dans le dossier images
+            if (post.image) {
+              const filename = post.image.split("/images/")[1];
+              fs.unlink(`images/${filename}`, () => {
+                //Suppression du post
+                post.destroy();
+                res.status(200).json({ message: "Post supprimé" });
+              });
+            } else {
+              post.destroy();
+              res.status(200).json({ message: "Post supprimé" });
+            }
+          })
+          .catch(() => {
+            res.status(404).json({ error: "Post non trouvé" });
+          });
       });
     })
-    .catch(() => {
-      res.status(404).json({ error: "Post non trouvé" });
-    });
+    .catch((error) => res.status(400).json({ error }));
 };
