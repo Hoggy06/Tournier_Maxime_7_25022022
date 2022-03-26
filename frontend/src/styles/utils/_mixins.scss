@@ -1,0 +1,17 @@
+@mixin marginPadding(
+  $m-direction: $allDirections,
+  $m-amount: 0,
+  $p-direction: $allDirections,
+  $p-amount: 0
+) {
+  @if $m-direction == $allDirections {
+    margin: $m-amount;
+  } @else if $m-direction == $specificDirections {
+    margin: $m-amount;
+  }
+  @if $p-direction == $allDirections {
+    padding: $p-amount;
+  } @else if $p-direction == $specificDirections {
+    padding: $p-amount;
+  }
+}
