@@ -32,12 +32,12 @@ exports.getAllComments = (req, res, next) => {
   Users.hasMany(Comments);
   //Data qui seront retournées
   const options = {
-    limit: 10,
+    where: { postId: req.params.postId },
     order: [["id", "DESC"]],
     attributes: ["id", "userId", "postId", "message", "created"],
     include: {
       model: Users,
-      attributes: ["firstname", "avatar"],
+      attributes: ["firstname", "image"],
     },
   };
   //Récupération des commentaires
@@ -58,7 +58,7 @@ exports.getOneComment = (req, res, next) => {
   Users.hasMany(Comments);
   //Data qui seront retournées
   const options = {
-    where: { postId: req.params.postId },
+    where: { postId: req.params.postId, id: req.params.id },
     attributes: ["id", "userId", "postId", "message", "created"],
     include: {
       model: Users,
@@ -87,7 +87,7 @@ exports.editComment = (req, res, next) => {
         .then(() => res.status(200).json({ message: "Commentaire modifié" }));
     })
     .catch((error) => {
-      res.status(400).json({ error });
+      res.status(404).json({ error });
     });
 };
 //Suppresion du commentaire
