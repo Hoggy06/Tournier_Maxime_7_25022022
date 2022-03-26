@@ -40,15 +40,22 @@ exports.createPost = (req, res, next) => {
 exports.getAllPosts = (req, res, next) => {
   //Jointure des tables Users et Posts
   Posts.belongsTo(Users);
+  Likes.belongsTo(Posts);
   Users.hasMany(Posts);
+  Posts.hasMany(Likes);
   //Utilisation des datas Posts et Users
   const options = {
     order: [["id", "DESC"]],
     attributes: ["id", "message", "image", "userId", "created"],
-    include: {
-      model: Users,
-      attributes: ["firstname", "image"],
-    },
+    include: [
+      {
+        model: Users,
+        attributes: ["firstname", "image"],
+      },
+      {
+        model: Likes,
+      },
+    ],
   };
   Posts.findAll(options)
     .then((posts) => {
@@ -62,16 +69,21 @@ exports.getAllPosts = (req, res, next) => {
 exports.getOnePost = (req, res, next) => {
   //Jointure des tables Users et Posts
   Posts.belongsTo(Users);
+  Likes.belongsTo(Posts);
   Users.hasMany(Posts);
+  Posts.hasMany(Likes);
 
   //Utilisation des datas Posts et Users
   const options = {
     where: { id: req.params.id },
     attributes: ["id", "message", "image", "userId", "created"],
-    include: {
-      model: Users,
-      attributes: ["firstname", "image"],
-    },
+    include: [
+      {
+        model: Users,
+        attributes: ["firstname", "image"],
+      },
+      { model: Likes, attributes: ["id", "userId"] },
+    ],
   };
   Posts.findOne(options)
     .then((post) => {
