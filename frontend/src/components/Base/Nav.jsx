@@ -41,6 +41,12 @@ export default function Nav() {
                   </Navbar.Item>
                   <Navbar.Divider />
                   <Navbar.Item href="/feeds">Fil d'actualité</Navbar.Item>
+                  {userConnected.isAdmin === true ? (
+                    <Fragment>
+                      <Navbar.Divider />
+                      <Navbar.Item href={`/adminPanel/`}>Admin</Navbar.Item>
+                    </Fragment>
+                  ) : null}
                 </Navbar.Dropdown>
               </Navbar.Item>
               <Navbar.Item href="/" onClick={logout}>
