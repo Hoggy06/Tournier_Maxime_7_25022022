@@ -9,11 +9,15 @@ import reportWebVitals from "./reportWebVitals";
 import NotFound from "./pages/NotFound";
 import UpdateOnePost from "./pages/UpdateOnePost";
 import UpdateOneComment from "./pages/UpdateOneComment";
+import Profil from "./pages/Profil";
+import Admin from "./pages/Admin";
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Routes>
         <Route exact path="/" element={<Home />} />
+        <Route exact path="/adminPanel" element={<Admin />} />
+        <Route exact path="/user/:id" element={<Profil />} />
         <Route exact path="/feeds" element={<Feeds />} />
         <Route exact path="/post/:id" element={<Publication />} />
         <Route exact path="/editPost/:id" element={<UpdateOnePost />} />
