@@ -14,6 +14,7 @@ export default function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
   const regexFirstnameAndLastname = /^[a-zA-Z\s-]{3,35}$/;
   const regexEmail = /^([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})$/;
@@ -48,6 +49,8 @@ export default function SignUpForm() {
       .then((res) => {
         if (res.message) {
           setSuccess(res.message);
+        } else {
+          setError(res.error);
         }
       })
       .catch((error) => console.log(error));
@@ -198,7 +201,7 @@ export default function SignUpForm() {
         </Form.Control>
       </Form.Field>
       <Form.Help align="center" textSize="6" color="success">
-        {success}
+        {success ? success : error}
       </Form.Help>
     </form>
   );
