@@ -86,7 +86,6 @@ exports.getAllUsers = (req, res, next) => {
   Users.hasMany(Comments);
   Users.hasMany(Likes);
   const options = {
-    limit: 10,
     order: [["id", "DESC"]],
     attributes: ["id", "firstname", "lastname", "image", "created"],
     include: [
