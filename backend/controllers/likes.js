@@ -36,7 +36,6 @@ exports.getAllLike = (req, res, next) => {
   Posts.hasMany(Likes);
   //Data qui seront retournées
   const options = {
-    limit: 10,
     order: [["id", "DESC"]],
     include: {
       model: Posts,
@@ -60,9 +59,6 @@ exports.getOneLike = (req, res, next) => {
   //Data qui seront retournées
   const options = {
     where: { id: req.params.likeId },
-    include: {
-      model: Posts,
-    },
   };
   Likes.findOne(options)
     .then((like) => {
