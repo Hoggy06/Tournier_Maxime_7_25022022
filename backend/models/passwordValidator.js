@@ -7,8 +7,6 @@ const schemaPassword = new passwordValidator();
 schemaPassword
   .is()
   .min(8) // Minimum length 8
-  .is()
-  .max(20) // Maximum length 20
   .has()
   .uppercase() // Must have uppercase letters
   .has()

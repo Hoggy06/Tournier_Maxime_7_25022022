@@ -7,16 +7,8 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      idAuthor: {
+      idUser: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      authorFirstname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      authorLastname: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
       message: {
@@ -25,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       image: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

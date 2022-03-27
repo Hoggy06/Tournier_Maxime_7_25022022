@@ -7,7 +7,6 @@ const Roles = require("../models/Roles.js");
 const Users = require("../models/Users.js");
 const dotenv = require("dotenv");
 dotenv.config();
-
 const sequelize = new Sequelize(
   process.env.DATABASE,
   process.env.USER,
@@ -43,4 +42,4 @@ function sync(err) {
   }
 }
 
-module.exports = { connectToDatabase, sync };
+module.exports = { sequelize, connectToDatabase, sync };
