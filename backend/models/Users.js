@@ -18,15 +18,19 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: "column",
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      avatar: {
+      image: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

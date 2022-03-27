@@ -7,16 +7,16 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      idAuthor: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      idPost: {
+      postId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
       message: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
     },

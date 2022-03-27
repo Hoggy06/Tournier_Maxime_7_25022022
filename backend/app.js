@@ -3,11 +3,14 @@ const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const { connectToDatabase, sync } = require("./config/database.js");
 
 const authRoutes = require("./routes/auth.js");
 const usersRoutes = require("./routes/users.js");
+const postsRoutes = require("./routes/posts.js");
+const adminRoutes = require("./routes/admin.js");
 
 //Utilisation d'express
 const app = express();
@@ -34,6 +37,7 @@ connectToDatabase();
 sync();
 
 app.use(express.json());
+app.use(cookieParser());
 
 //Middleware pour le dossier images
 app.use("/images", express.static(path.join(__dirname, "images")));
@@ -41,5 +45,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 //Middleware pour l'authentification
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/posts", postsRoutes);
+app.use("/api/admin", adminRoutes);
 
 module.exports = app;

@@ -8,18 +8,12 @@ const cryptojs = require("crypto-js");
 const EMAIL_CRYPTOJS_KEY = process.env.EMAIL_CRYPTOJS_KEY;
 
 // ---------------------- Crypto functions -------------------------
-
-const encryptEmail = (email, key) => {
-  return cryptojs.AES.encrypt(email, key).toString();
-};
-
-const decryptEmail = (encryptEmail, key) => {
-  const decrypted = cryptojs.AES.decrypt(encryptEmail, key);
-  const emailDecrypted = decrypted.toString(cryptojs.enc.Utf8);
-  return emailDecrypted;
+//Pas de toString ?
+const encryptEmail = (email) => {
+  return cryptojs.HmacSHA256(email, EMAIL_CRYPTOJS_KEY).toString();
 };
 
 // ============================================================
 // ------------------------- EXPORT ---------------------------
 
-module.exports = { encryptEmail, decryptEmail, EMAIL_CRYPTOJS_KEY };
+module.exports = { encryptEmail };

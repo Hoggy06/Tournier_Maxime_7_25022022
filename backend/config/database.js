@@ -3,7 +3,6 @@ const { Sequelize, DataTypes } = require("sequelize");
 const Comments = require("../models/Comments.js");
 const Likes = require("../models/Likes.js");
 const Posts = require("../models/Posts.js");
-const Roles = require("../models/Roles.js");
 const Users = require("../models/Users.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -22,7 +21,6 @@ const sequelize = new Sequelize(
 const commentsModel = Comments(sequelize, DataTypes);
 const likesModel = Likes(sequelize, DataTypes);
 const postsModel = Posts(sequelize, DataTypes);
-const rolesModel = Roles(sequelize, DataTypes);
 const usersModel = Users(sequelize, DataTypes);
 
 function connectToDatabase(err) {
@@ -38,7 +36,9 @@ function sync(err) {
   if (err) {
     console.log(err);
   } else {
-    sequelize.sync().then(() => console.log("Synchronization was successful"));
+    sequelize
+      .sync({ alter: true })
+      .then(() => console.log("Synchronization was successful"));
   }
 }
 

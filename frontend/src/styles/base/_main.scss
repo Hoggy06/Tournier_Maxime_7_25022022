@@ -1,0 +1,11 @@
+.mainMarginPadding {
+  @include marginPadding(
+    $specificDirections,
+    7em 0 2em 0,
+    $allDirections,
+    0 2em 0 2em
+  );
+}
+.pJustify {
+  text-align: justify;
+}
