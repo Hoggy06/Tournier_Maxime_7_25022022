@@ -112,19 +112,9 @@ exports.editPost = (req, res, next) => {
           }
         : { ...req.body };
       //Maj du post
-      if (post.image) {
-        const filename = post.image.split("/images/")[1];
-        fs.unlink(`images/${filename}`, () => {
-          //Suppression du post
-          post
-            .update({ ...postObject, id: req.params.id })
-            .then(() => res.status(200).json({ message: "Post modifié" }));
-        });
-      } else {
-        post
-          .update({ ...postObject, id: req.params.id })
-          .then(() => res.status(200).json({ message: "Post modifié" }));
-      }
+      post
+        .update({ ...postObject, id: req.params.id })
+        .then(() => res.status(200).json({ message: "Post modifié" }));
     })
     .catch((error) => {
       res.status(400).json({ error });
@@ -138,7 +128,7 @@ exports.deletePost = (req, res, next) => {
         Posts.findOne({ where: { id: req.params.id } })
           .then((post) => {
             //L'utilisateur doit etre l'auteur du post pour supprimer
-            if (post.userId !== req.auth.userId && req.auth.isAdmin === false) {
+            if (post.userId !== req.auth.userId) {
               return res.status(403).json({ error: "Accès non autorisé" });
             }
             //Suppression de l'image dans le dossier images
