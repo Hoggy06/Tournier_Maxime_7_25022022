@@ -9,10 +9,12 @@ import {
   Content,
   Image,
   Message,
+  Heading,
 } from "react-bulma-components";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { port } from "../../port";
 
 export default function UpdatePost() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
@@ -29,8 +31,12 @@ export default function UpdatePost() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("message", message);
-    data.append("image", image);
+    if (message !== "") {
+      data.append("message", message);
+    }
+    if (image !== "") {
+      data.append("image", image);
+    }
     const options = {
       method: "PUT",
       headers: {
@@ -39,20 +45,21 @@ export default function UpdatePost() {
       body: data,
     };
 
-    fetch(`http://localhost:3307/api/posts/${id}`, options)
+    fetch(`http://localhost:${port}/api/posts/${id}`, options)
       .then((response) => response.json())
       .then((res) => {
         if (res.error) {
           setError(res.error);
         } else {
           navigate(`/post/${id}`);
+          setData(res);
         }
       })
       .catch((error) => console.log(error));
   };
 
   useEffect(() => {
-    fetch(`http://localhost:3307/api/posts/${id}`, {
+    fetch(`http://localhost:${port}/api/posts/${id}`, {
       method: "GET",
       headers: {
         Authorization: token,
@@ -60,16 +67,22 @@ export default function UpdatePost() {
     })
       .then((response) => response.json())
       .then((res) => {
-        setData(res);
+        if (res.error) {
+          setError(res.error);
+        } else {
+          setData(res);
+        }
       })
       .catch((error) => console.log(error));
-  }, [id, token]);
+  }, [id, token, userConnected, data]);
+
   return (
     <Fragment>
-      {userConnected.userId === data.userId ? (
+      {userConnected && userConnected.userId === data.userId ? (
         <Fragment>
           {" "}
           <Box>
+            <Heading size={6}>Edition du post</Heading>
             <Media>
               <Media.Item renderAs="article" align="left">
                 {data.User && (
@@ -81,7 +94,7 @@ export default function UpdatePost() {
                   <p className="pJustify">
                     {data.User && <b>{data.User.firstname}</b>}{" "}
                     <small>
-                      - Le {moment(data.created).format("DD/MM/YYYY à HH:mm")}
+                      - {moment(data.created).startOf("YYYYMMDD").fromNow()}
                     </small>
                     <br />
                     {data.message}
@@ -105,7 +118,7 @@ export default function UpdatePost() {
                         size="small"
                         type="text"
                         placeholder={`Que voulez vous dire ?`}
-                        value={message}
+                        defaultValue={data.message}
                         onChange={onMessageChange}
                         name="message"
                         required
@@ -129,7 +142,7 @@ export default function UpdatePost() {
                   <Form.Field>
                     <Form.Control>
                       <Button color="link" disabled={!userConnected}>
-                        Envoyer
+                        Editer
                       </Button>
                     </Form.Control>
                   </Form.Field>
