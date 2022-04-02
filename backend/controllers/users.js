@@ -12,7 +12,9 @@ const { encryptEmail } = require("../middlewares/crypto.js");
 const schemaPassword = require("../models/passwordValidator.js");
 
 exports.editUser = (req, res, next) => {
-  Users.findOne({ where: { id: req.params.id } })
+  Users.findOne({
+    where: { id: req.params.id },
+  })
     .then((user) => {
       if (user.id !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
