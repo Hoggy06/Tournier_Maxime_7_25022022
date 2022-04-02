@@ -16,7 +16,7 @@ export default function Feeds() {
         </Helmet>
       </HelmetProvider>
       <Nav />
-      {userConnected.isAdmin === true ? (
+      {userConnected && userConnected.isAdmin === true ? (
         <Fragment>
           <Columns.Column
             mobile={{ size: 12 }}
