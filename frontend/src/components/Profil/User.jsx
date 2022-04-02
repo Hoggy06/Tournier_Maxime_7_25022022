@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
 import {
   Media,
@@ -17,11 +17,12 @@ import {
   faUser,
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
+import { port } from "../../port";
 
 export default function Comments() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const { id } = useParams();
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -32,6 +33,8 @@ export default function Comments() {
   const onImageChange = (e) => setImage(e.target.files[0]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isDeleteUser, setIsDeleteUser] = useState(false);
+  const navigate = useNavigate();
   const onFirstnameChange = (e) => {
     setFirstname(e.target.value);
   };
@@ -41,14 +44,25 @@ export default function Comments() {
   const onEmailChange = (e) => {
     setEmail(e.target.value);
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("firstname", firstname);
-    data.append("lastname", lastname);
-    data.append("email", email);
-    data.append("image", image);
+    if (firstname !== "") {
+      data.append("firstname", firstname);
+    }
+    if (lastname !== "") {
+      data.append("lastname", lastname);
+    }
+    if (email !== "") {
+      data.append("email", email);
+    }
+    if (image !== "") {
+      data.append("image", image);
+    }
+    if (image === "" && email === "" && firstname === "" && lastname === "") {
+      return setError("Veuillez renseigner au moins un champs");
+    }
+
     const options = {
       method: "PUT",
       headers: {
@@ -57,7 +71,7 @@ export default function Comments() {
       body: data,
     };
 
-    fetch(`http://localhost:3307/api/users/edit/${id}`, options)
+    fetch(`http://localhost:${port}/api/users/edit/${id}`, options)
       .then((response) => response.json())
       .then((res) => {
         if (res.error) {
@@ -65,12 +79,59 @@ export default function Comments() {
         } else {
           setSuccess(res.message);
         }
+        fetch(`http://localhost:${port}/api/users/${id}`, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => setData(data))
+          .catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error));
+    setFirstname("");
+    setLastname("");
+    setEmail("");
+    setImage("");
+  };
+
+  const deleteAction = () => {
+    setIsDeleteUser(!isDeleteUser);
+  };
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    const options = {
+      method: "DELETE",
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+    };
+    fetch(`http://localhost:${port}/api/users/${id}`, options)
+      .then((response) => response.json())
+      .then(() => {
+        fetch(`http://localhost:${port}/api/users/`, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setData(data);
+            navigate("/");
+            localStorage.clear();
+          })
+          .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
   };
-
   useEffect(() => {
-    fetch(`http://localhost:3307/api/users/${id}`, {
+    fetch(`http://localhost:${port}/api/users/${id}`, {
       method: "GET",
       headers: {
         Authorization: token,
@@ -78,9 +139,11 @@ export default function Comments() {
       },
     })
       .then((response) => response.json())
-      .then((data) => setData(data))
+      .then((data) => {
+        setData(data);
+      })
       .catch((error) => console.log(error));
-  }, [id, token, data]);
+  }, [id, token]);
 
   return (
     <Fragment>
@@ -112,6 +175,8 @@ export default function Comments() {
               <p>
                 Inscrit depuis le{" "}
                 {data.user && moment(data.user.created).format("DD/MM/YYYY")}
+                <br />
+                {data.user && data.user.email}
               </p>
             </Content>
           </Media.Item>
@@ -235,17 +300,61 @@ export default function Comments() {
                 </Form.Field>
                 <Form.Field>
                   <Form.Control>
-                    <Button color="link" disabled={!userConnected}>
+                    <Button
+                      color="link"
+                      disabled={!email && !firstname && !lastname && !image}
+                    >
                       Mettre à jour
                     </Button>
                   </Form.Control>
                 </Form.Field>
               </Media.Item>
             </Media>
-            <Form.Help align="center" textSize="6" color="success">
-              {success ? success : error}
-            </Form.Help>
+            {success ? (
+              <Form.Help align="center" textSize="6" color="success">
+                {success}
+              </Form.Help>
+            ) : (
+              <Form.Help align="center" textSize="6" color="danger">
+                {error}
+              </Form.Help>
+            )}
           </form>
+          <Button.Group align="center">
+            <Button onClick={deleteAction} color="danger" outlined>
+              Supprimer mon compte
+            </Button>
+            {!isDeleteUser ? null : (
+              <div className={isDeleteUser ? "modal is-active" : "modal"}>
+                <div className="modal-background"></div>
+                <div className="modal-content">
+                  <div className="modal-card">
+                    <header className="modal-card-head">
+                      <p className="modal-card-title">Suppression du compte</p>
+                    </header>
+                    <section className="modal-card-body">
+                      <p>
+                        Cette action est irréversible. La suppression de votre
+                        compte entrainera la perte définitive de vos données.
+                        Êtes-vous sûr de vouloir continuer ?
+                      </p>
+                    </section>
+                    <footer className="modal-card-foot">
+                      <button
+                        onClick={handleDelete}
+                        className="button is-danger"
+                      >
+                        Supprimer
+                      </button>
+                      <button onClick={deleteAction} className="button">
+                        Annuler
+                      </button>
+                    </footer>
+                  </div>
+                </div>
+              </div>
+            )}
+          </Button.Group>
         </Box>
       ) : null}
     </Fragment>
