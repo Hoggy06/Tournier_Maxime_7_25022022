@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Table, Box, Tag, Button } from "react-bulma-components";
 import moment from "moment";
 import { port } from "../../port";
-
+import { Link } from "react-router-dom";
 export default function Admin() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
@@ -103,9 +103,15 @@ export default function Admin() {
                 <Fragment key={index}>
                   <tbody>
                     <tr>
-                      <td>{i.id}</td>
-                      <td>{i.lastname}</td>
-                      <td>{i.firstname}</td>
+                      <td>
+                        <Link to={`/user/${i.id}`}>{i.id}</Link>
+                      </td>
+                      <td>
+                        <Link to={`/user/${i.id}`}>{i.lastname}</Link>
+                      </td>
+                      <td>
+                        <Link to={`/user/${i.id}`}>{i.firstname}</Link>
+                      </td>
                       <td>
                         {i.isAdmin === true ? (
                           <Tag renderAs="span" color="success">
