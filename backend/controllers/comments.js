@@ -95,7 +95,7 @@ exports.deleteComment = (req, res, next) => {
   Comments.findOne({ where: { id: req.params.id } })
     .then((comment) => {
       //Si l'utilisateur n'est pas l'auteur du commentaire = 403
-      if (comment.userId !== req.auth.userId && req.auth.isAdmin === false) {
+      if (comment.userId !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
       } else {
         comment.destroy();
