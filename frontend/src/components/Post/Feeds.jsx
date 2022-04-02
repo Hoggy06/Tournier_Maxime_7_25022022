@@ -109,14 +109,14 @@ export default function Posts() {
                     name="image"
                     filename={image.name}
                     icon={<FontAwesomeIcon icon={faUpload} />}
-                    label="Choisir un fichier"
+                    label="Ajouter une image"
                   />
                 </Form.Control>
               </Form.Field>
               <Form.Field>
                 <Form.Control>
-                  <Button color="link" disabled={!userConnected}>
-                    Envoyer
+                  <Button color="link" disabled={!userConnected || !message}>
+                    Poster
                   </Button>
                 </Form.Control>
               </Form.Field>
@@ -168,19 +168,15 @@ export default function Posts() {
                 )}
               </Media.Item>
               <Media.Item>
-                <Content>
-                  <p className="pJustify">
-                    {i.User && <b>{i.User.firstname}</b>}{" "}
-                    <small>
-                      - {moment(i.created).startOf("YYYYMMDD").fromNow()}
-                    </small>
-                    <br />
-                    {i.message}
-                    <br />
-                    {i.image ? (
-                      <Image src={i.image} alt={`${i.image}`} />
-                    ) : null}
-                  </p>
+                <Content className="pJustify">
+                  {i.User && <b>{i.User.firstname}</b>}{" "}
+                  <small>
+                    - {moment(i.created).startOf("YYYYMMDD").fromNow()}
+                  </small>
+                  <br />
+                  {i.message}
+                  <br />
+                  {i.image ? <Image src={i.image} alt={`${i.image}`} /> : null}
                   <nav className="level is-mobile">
                     <div className="level-left">
                       <Link className="level-item" to={`/post/${i.id}`}>
