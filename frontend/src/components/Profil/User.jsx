@@ -9,11 +9,12 @@ import {
   Tag,
   Form,
   Button,
+  Level,
+  Heading,
 } from "react-bulma-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUpload,
-  faEnvelope,
   faUser,
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -26,9 +27,7 @@ export default function Comments() {
   const { id } = useParams();
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
   const regexFirstnameAndLastname = /^[a-zA-Z\s-]{3,35}$/;
-  const regexEmail = /^([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})$/;
   const [image, setImage] = useState("");
   const onImageChange = (e) => setImage(e.target.files[0]);
   const [error, setError] = useState("");
@@ -41,9 +40,6 @@ export default function Comments() {
   const onLastnameChange = (e) => {
     setLastname(e.target.value);
   };
-  const onEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -53,15 +49,10 @@ export default function Comments() {
     if (lastname !== "") {
       formData.append("lastname", lastname);
     }
-    if (email !== "") {
-      formData.append("email", email);
-    } else {
-      formData.append("email", data.user.email);
-    }
     if (image !== "") {
       formData.append("image", image);
     }
-    if (image === "" && email === "" && firstname === "" && lastname === "") {
+    if (image === "" && firstname === "" && lastname === "") {
       return setError("Veuillez renseigner au moins un champs");
     }
 
@@ -97,7 +88,6 @@ export default function Comments() {
       .catch((error) => console.log(error));
     setFirstname("");
     setLastname("");
-    setEmail("");
     setImage("");
   };
 
@@ -179,9 +169,19 @@ export default function Comments() {
               <p>
                 Inscrit depuis le{" "}
                 {data.user && moment(data.user.created).format("DD/MM/YYYY")}
-                <br />
-                {data.user && data.user.email}
               </p>
+              <Level>
+                <Level.Item>
+                  <Heading size={5} subtitle>
+                    {data.user && data.user.Posts.length} Posts
+                  </Heading>
+                </Level.Item>
+                <Level.Item>
+                  <Heading size={5} subtitle>
+                    {data.user && data.user.Comments.length} Commentaires
+                  </Heading>
+                </Level.Item>
+              </Level>
             </Content>
           </Media.Item>
         </Media>
@@ -259,46 +259,15 @@ export default function Comments() {
                 </Form.Field>
                 <Form.Field>
                   <Form.Control>
-                    <Form.Label>
-                      <FontAwesomeIcon icon={faEnvelope} />
-                      Email
-                    </Form.Label>
-                    <Form.Input
-                      className="input"
-                      type="text"
-                      placeholder="Votre adresse mail"
-                      value={email}
-                      onChange={onEmailChange}
-                      name="email"
-                    />
-                    {regexEmail.test(email) === false ? (
-                      <Form.Help
-                        style={{
-                          display: email ? null : "none",
-                        }}
-                        align="center"
-                        textSize="6"
-                        color="danger"
-                      >
-                        Email invalide
-                      </Form.Help>
-                    ) : (
-                      <Form.Help align="center" textSize="6" color="success">
-                        <FontAwesomeIcon icon={faCircleCheck} />
-                      </Form.Help>
-                    )}
-                  </Form.Control>
-                </Form.Field>
-                <Form.Field>
-                  <Form.Control>
                     <Form.InputFile
+                      size="small"
                       color="link"
                       type="file"
                       onChange={onImageChange}
                       name="image"
                       filename={image.name}
                       icon={<FontAwesomeIcon icon={faUpload} />}
-                      label="Choisir un fichier"
+                      label="Changer votre photo"
                     />
                   </Form.Control>
                 </Form.Field>
@@ -306,7 +275,7 @@ export default function Comments() {
                   <Form.Control>
                     <Button
                       color="link"
-                      disabled={!email && !firstname && !lastname && !image}
+                      disabled={!firstname && !lastname && !image}
                     >
                       Mettre à jour
                     </Button>
