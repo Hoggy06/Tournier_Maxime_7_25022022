@@ -20,8 +20,8 @@ export default function Feeds() {
         <Fragment>
           <Columns.Column
             mobile={{ size: 12 }}
-            tablet={{ size: 12 }}
-            desktop={{ size: 4, offset: 4 }}
+            tablet={{ size: 8, offset: 2 }}
+            desktop={{ size: 6, offset: 3 }}
           >
             <Posts />
           </Columns.Column>
@@ -29,7 +29,7 @@ export default function Feeds() {
       ) : (
         <Columns.Column
           mobile={{ size: 12 }}
-          tablet={{ size: 12 }}
+          tablet={{ size: 8, offset: 2 }}
           desktop={{ size: 6, offset: 3 }}
         >
           <Message color="danger">
