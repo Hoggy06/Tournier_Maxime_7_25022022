@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { port } from "../../port";
 import { Form, Button } from "react-bulma-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -44,7 +44,7 @@ export default function SignUpForm() {
       body: JSON.stringify(data),
     };
 
-    fetch(`http://localhost:3307/api/auth/signup`, options)
+    fetch(`http://localhost:${port}/api/auth/signup`, options)
       .then((response) => response.json())
       .then((res) => {
         if (res.message) {
@@ -71,7 +71,6 @@ export default function SignUpForm() {
             value={lastname}
             onChange={onLastnameChange}
             name="lastname"
-            required
           />
           {regexFirstnameAndLastname.test(lastname) === false ? (
             <Form.Help
@@ -105,7 +104,6 @@ export default function SignUpForm() {
             value={firstname}
             onChange={onFirstnameChange}
             name="firstname"
-            required
           />
           {regexFirstnameAndLastname.test(firstname) === false ? (
             <Form.Help
@@ -139,7 +137,6 @@ export default function SignUpForm() {
             value={email}
             onChange={onEmailChange}
             name="email"
-            required
           />
           {regexEmail.test(email) === false ? (
             <Form.Help
@@ -172,12 +169,11 @@ export default function SignUpForm() {
             value={password}
             onChange={onPasswordChange}
             name="password"
-            required
           />
           {regexPassword.test(password) === false ? (
             <Form.Help
               style={{
-                display: lastname ? null : "none",
+                display: password ? null : "none",
               }}
               align="center"
               textSize="6"
@@ -196,13 +192,20 @@ export default function SignUpForm() {
       <Form.Field kind="group" align="center">
         <Form.Control>
           <Button type="submit" color="link">
-            Envoyer
+            S'inscrire
           </Button>
         </Form.Control>
       </Form.Field>
-      <Form.Help align="center" textSize="6" color="success">
-        {success ? success : error}
-      </Form.Help>
+
+      {success ? (
+        <Form.Help align="center" textSize="6" color="success">
+          {success}
+        </Form.Help>
+      ) : (
+        <Form.Help align="center" textSize="6" color="danger">
+          {error}
+        </Form.Help>
+      )}
     </form>
   );
 }

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { port } from "../../port";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ export default function LoginForm() {
       body: JSON.stringify(data),
     };
 
-    fetch(`http://localhost:3307/api/auth/login`, options)
+    fetch(`http://localhost:${port}/api/auth/login`, options)
       .then((response) => response.json())
       .then((res) => {
         localStorage.setItem("userConnected", JSON.stringify(res));
@@ -67,7 +68,6 @@ export default function LoginForm() {
             value={email}
             onChange={onEmailChange}
             name="email"
-            required
           />
         </Form.Control>
       </Form.Field>
@@ -84,13 +84,12 @@ export default function LoginForm() {
             value={password}
             onChange={onPasswordChange}
             name="password"
-            required
           />
         </Form.Control>
       </Form.Field>
       <Form.Field kind="group" align="center">
         <Form.Control>
-          <Button color="link">Envoyer</Button>
+          <Button color="link">Se connecter</Button>
         </Form.Control>
       </Form.Field>
       {errorMessage()}

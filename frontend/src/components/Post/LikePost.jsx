@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { port } from "../../port";
 
 export default function LikePost(props) {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
@@ -20,13 +21,13 @@ export default function LikePost(props) {
       },
       body: JSON.stringify(data),
     };
-    fetch(`http://localhost:3307/api/posts/${props.idPost}/like`, options)
+    fetch(`http://localhost:${port}/api/posts/${props.idPost}/like`, options)
       .then((response) => response.json())
       .then(() => setLikePost(!likePost))
       .catch((error) => console.log(error));
   };
   useEffect(() => {
-    fetch(`http://localhost:3307/api/posts/${props.idPost}/like/`, {
+    fetch(`http://localhost:${port}/api/posts/${props.idPost}/like/`, {
       method: "GET",
       headers: {
         Authorization: token,
@@ -35,7 +36,7 @@ export default function LikePost(props) {
       .then((response) => response.json())
       .then((res) => setLikes(res))
       .catch((error) => console.log(error));
-  }, [token, likePost, props.idPost, likes]);
+  }, [token, likePost, props.idPost]);
   return (
     <Fragment>
       {likePost ? (

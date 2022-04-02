@@ -7,10 +7,12 @@ import {
   Image,
   Content,
   Message,
+  Heading,
 } from "react-bulma-components";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { port } from "../../port";
 
 export default function UpdateComment() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
@@ -33,7 +35,7 @@ export default function UpdateComment() {
       },
       body: JSON.stringify(data),
     };
-    fetch(`http://localhost:3307/api/posts/${idPost}/comment/${id}`, options)
+    fetch(`http://localhost:${port}/api/posts/${idPost}/comment/${id}`, options)
       .then((response) => response.json())
       .then((res) => {
         if (res.error) {
@@ -45,7 +47,7 @@ export default function UpdateComment() {
       .catch((error) => console.log(error));
   };
   useEffect(() => {
-    fetch(`http://localhost:3307/api/posts/${idPost}/comment/${id}`, {
+    fetch(`http://localhost:${port}/api/posts/${idPost}/comment/${id}`, {
       method: "GET",
       headers: {
         Authorization: token,
@@ -60,6 +62,7 @@ export default function UpdateComment() {
       {userConnected.userId === data.userId ? (
         <Fragment>
           <Box>
+            <Heading size={6}>Edition du commentaire</Heading>
             <Media>
               <Media.Item renderAs="article" align="left">
                 {data.User && (
@@ -71,7 +74,7 @@ export default function UpdateComment() {
                   <p className="pJustify">
                     {data.User && <b>{data.User.firstname}</b>}{" "}
                     <small>
-                      - Le {moment(data.created).format("DD/MM/YYYY à HH:mm")}
+                      - {moment(data.created).startOf("YYYYMMDD").fromNow()}
                     </small>
                     <br />
                     {data.message}
@@ -91,7 +94,7 @@ export default function UpdateComment() {
                         size="small"
                         type="text"
                         placeholder={`Que voulez vous dire ?`}
-                        value={message}
+                        defaultValue={data.message}
                         onChange={onMessageChange}
                         name="message"
                         required
@@ -102,7 +105,7 @@ export default function UpdateComment() {
                   <Form.Field>
                     <Form.Control>
                       <Button color="link" disabled={!userConnected}>
-                        Envoyer
+                        Editer
                       </Button>
                     </Form.Control>
                   </Form.Field>

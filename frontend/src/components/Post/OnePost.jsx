@@ -4,15 +4,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Media, Image, Box, Content } from "react-bulma-components";
 import moment from "moment";
-import DeletePost from "./DeletePost";
-import LikePost from "./LikePost";
+import { port } from "../../port";
+//import LikePost from "./LikePost";
 export default function OnePost() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [data, setData] = useState({});
+  //const [deletePost, setDeletePost] = useState(false);
   const { id } = useParams();
   useEffect(() => {
-    fetch(`http://localhost:3307/api/posts/${id}`, {
+    fetch(`http://localhost:${port}/api/posts/${id}`, {
       method: "GET",
       headers: {
         Authorization: token,
@@ -22,7 +23,7 @@ export default function OnePost() {
       .then((response) => response.json())
       .then((data) => setData(data))
       .catch((error) => console.log(error));
-  }, [id, token, data]);
+  }, [id, token]);
 
   return (
     <Box>
@@ -39,7 +40,7 @@ export default function OnePost() {
             <p className="pJustify">
               {data.User && <b>{data.User.firstname}</b>}{" "}
               <small>
-                - Le {moment(data.created).format("DD/MM/YYYY à HH:mm")}
+                - {moment(data.created).startOf("YYYYMMDD").fromNow()}
               </small>
               <br />
               {data.message}
@@ -50,7 +51,7 @@ export default function OnePost() {
             </p>
             <nav className="level is-mobile">
               <div className="level-left">
-                <LikePost idPost={data.id} />
+                {/*<LikePost idPost={data.id} />*/}
                 {userConnected.userId === data.userId ? (
                   <Link className="level-item" to={`/editPost/${data.id}`}>
                     <span
@@ -64,12 +65,6 @@ export default function OnePost() {
               </div>
             </nav>
           </Content>
-        </Media.Item>
-        <Media.Item renderAs="article" align="right">
-          {userConnected.userId === data.userId ||
-          userConnected.isAdmin === true ? (
-            <DeletePost idPost={data.id} />
-          ) : null}
         </Media.Item>
       </Media>
     </Box>
