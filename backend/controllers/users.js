@@ -8,8 +8,6 @@ const Comments = require("../models/Comments.js")(sequelize, DataTypes);
 const Likes = require("../models/Likes.js")(sequelize, DataTypes);
 const bcrypt = require("bcrypt");
 const fs = require("fs");
-const { encryptEmail } = require("../middlewares/crypto.js");
-const schemaPassword = require("../models/passwordValidator.js");
 
 exports.editUser = (req, res, next) => {
   Users.findOne({
@@ -23,7 +21,6 @@ exports.editUser = (req, res, next) => {
         ? {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
-            email: encryptEmail(req.body.email),
             image: `${req.protocol}://${req.get("host")}/images/${
               req.file.filename
             }`,
@@ -31,7 +28,6 @@ exports.editUser = (req, res, next) => {
         : {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
-            email: encryptEmail(req.body.email),
           };
 
       user
