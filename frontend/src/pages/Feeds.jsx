@@ -3,9 +3,8 @@ import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
 import { Fragment } from "react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
-import CreatePost from "../components/Post/CreatePost";
+import Posts from "../components/Post/Feeds";
 import { Columns, Message } from "react-bulma-components";
-import AllPosts from "../components/Post/AllPosts";
 
 export default function Feeds() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
@@ -24,8 +23,7 @@ export default function Feeds() {
             tablet={{ size: 12 }}
             desktop={{ size: 4, offset: 4 }}
           >
-            <CreatePost />
-            <AllPosts />
+            <Posts />
           </Columns.Column>
         </Fragment>
       ) : (
