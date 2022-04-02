@@ -90,19 +90,17 @@ export default function UpdatePost() {
                 )}
               </Media.Item>
               <Media.Item>
-                <Content>
-                  <p className="pJustify">
-                    {data.User && <b>{data.User.firstname}</b>}{" "}
-                    <small>
-                      - {moment(data.created).startOf("YYYYMMDD").fromNow()}
-                    </small>
-                    <br />
-                    {data.message}
-                    <br />
-                    {data.image ? (
-                      <img src={data.image} alt={`${data.image}`} />
-                    ) : null}
-                  </p>
+                <Content className="pJustify">
+                  {data.User && <b>{data.User.firstname}</b>}{" "}
+                  <small>
+                    - {moment(data.created).startOf("YYYYMMDD").fromNow()}
+                  </small>
+                  <br />
+                  {data.message}
+                  <br />
+                  {data.image ? (
+                    <img src={data.image} alt={`${data.image}`} />
+                  ) : null}
                 </Content>
               </Media.Item>
             </Media>
@@ -115,7 +113,7 @@ export default function UpdatePost() {
                     <Form.Control>
                       <Form.Textarea
                         className="textarea"
-                        size="small"
+                        size="medium"
                         type="text"
                         placeholder={`Que voulez vous dire ?`}
                         defaultValue={data.message}
@@ -135,13 +133,16 @@ export default function UpdatePost() {
                         name="image"
                         filename={image.name}
                         icon={<FontAwesomeIcon icon={faUpload} />}
-                        label="Choisir un fichier"
+                        label="Modifier l'image"
                       />
                     </Form.Control>
                   </Form.Field>
                   <Form.Field>
                     <Form.Control>
-                      <Button color="link" disabled={!userConnected}>
+                      <Button
+                        color="link"
+                        disabled={!userConnected || !message}
+                      >
                         Editer
                       </Button>
                     </Form.Control>

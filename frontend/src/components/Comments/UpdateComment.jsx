@@ -70,15 +70,13 @@ export default function UpdateComment() {
                 )}
               </Media.Item>
               <Media.Item>
-                <Content>
-                  <p className="pJustify">
-                    {data.User && <b>{data.User.firstname}</b>}{" "}
-                    <small>
-                      - {moment(data.created).startOf("YYYYMMDD").fromNow()}
-                    </small>
-                    <br />
-                    {data.message}
-                  </p>
+                <Content className="pJustify">
+                  {data.User && <b>{data.User.firstname}</b>}{" "}
+                  <small>
+                    - {moment(data.created).startOf("YYYYMMDD").fromNow()}
+                  </small>
+                  <br />
+                  {data.message}
                 </Content>
               </Media.Item>
             </Media>
@@ -91,7 +89,7 @@ export default function UpdateComment() {
                     <Form.Control>
                       <Form.Textarea
                         className="textarea"
-                        size="small"
+                        size="medium"
                         type="text"
                         placeholder={`Que voulez vous dire ?`}
                         defaultValue={data.message}

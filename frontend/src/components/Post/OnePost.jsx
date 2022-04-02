@@ -36,19 +36,17 @@ export default function OnePost() {
           )}
         </Media.Item>
         <Media.Item>
-          <Content>
-            <p className="pJustify">
-              {data.User && <b>{data.User.firstname}</b>}{" "}
-              <small>
-                - {moment(data.created).startOf("YYYYMMDD").fromNow()}
-              </small>
-              <br />
-              {data.message}
-              <br />
-              {data.image ? (
-                <Image src={data.image} alt={`${data.image}`} />
-              ) : null}
-            </p>
+          <Content className="pJustify">
+            {data.User && <b>{data.User.firstname}</b>}{" "}
+            <small>
+              - {moment(data.created).startOf("YYYYMMDD").fromNow()}
+            </small>
+            <br />
+            {data.message}
+            <br />
+            {data.image ? (
+              <Image src={data.image} alt={`${data.image}`} />
+            ) : null}
             <nav className="level is-mobile">
               <div className="level-left">
                 {/*<LikePost idPost={data.id} />*/}

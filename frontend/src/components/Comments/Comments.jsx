@@ -133,15 +133,13 @@ export default function Comments() {
                 )}
               </Media.Item>
               <Media.Item>
-                <Content>
-                  <p className="pJustify">
-                    {i.User && <b>{i.User.firstname}</b>}{" "}
-                    <small>
-                      - {moment(i.created).startOf("YYYYMMDD").fromNow()}
-                    </small>
-                    <br />
-                    {i.message}
-                  </p>
+                <Content className="pJustify">
+                  {i.User && <b>{i.User.firstname}</b>}{" "}
+                  <small>
+                    - {moment(i.created).startOf("YYYYMMDD").fromNow()}
+                  </small>
+                  <br />
+                  {i.message}
                   <nav className="level is-mobile">
                     <div className="level-left">
                       {userConnected.userId === i.userId ? (
