@@ -14,9 +14,9 @@ const { encryptEmail } = require("../middlewares/crypto.js");
 //Fonction signup
 exports.signup = (req, res, next) => {
   if (
-    req.body.firstname === "" ||
-    req.body.lastname === "" ||
-    req.body.email === "" ||
+    req.body.firstname === "" &&
+    req.body.lastname === "" &&
+    req.body.email === "" &&
     req.body.password === ""
   ) {
     return res.status(400).send({
@@ -49,7 +49,7 @@ exports.signup = (req, res, next) => {
       error: `Erreur email non valide !`,
     });
   }
-  if (!schemaPassword.validate(req.body.password)) {
+  if (!schemaPassword.validate(req.body.password) || req.body.password == "") {
     return res.status(400).send({
       error: `Le mot de passe doit contenir au moins : 8 caractères minimum, une majuscule, une minuscule, un chiffre, et aucun espace`,
     });
@@ -101,13 +101,9 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             userId: user.id,
             isAdmin: user.isAdmin,
-            token: jwt.sign(
-              { userId: user.id, isAdmin: user.isAdmin },
-              process.env.TOKEN_KEY,
-              {
-                expiresIn: maxAge,
-              }
-            ),
+            token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, {
+              expiresIn: maxAge,
+            }),
           });
         })
         .catch((error) => res.status(500).json({ error }));
