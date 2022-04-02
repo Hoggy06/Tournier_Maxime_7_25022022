@@ -62,7 +62,7 @@ exports.signup = (req, res, next) => {
         lastname: req.body.lastname,
         email: encryptEmail(req.body.email),
         password: hash,
-        image: "http://localhost:3307/images/default.png",
+        image: `http://localhost:${process.env.PORT}/images/default.png`,
         isAdmin: false,
       })
         .then(() =>
