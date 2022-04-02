@@ -46,29 +46,33 @@ export default function Comments() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = new FormData();
+    const formData = new FormData();
     if (firstname !== "") {
-      data.append("firstname", firstname);
+      formData.append("firstname", firstname);
     }
     if (lastname !== "") {
-      data.append("lastname", lastname);
+      formData.append("lastname", lastname);
     }
     if (email !== "") {
-      data.append("email", email);
+      formData.append("email", email);
+    } else {
+      formData.append("email", data.user.email);
     }
     if (image !== "") {
-      data.append("image", image);
+      formData.append("image", image);
     }
     if (image === "" && email === "" && firstname === "" && lastname === "") {
       return setError("Veuillez renseigner au moins un champs");
     }
+
+    console.log(data.user.email);
 
     const options = {
       method: "PUT",
       headers: {
         Authorization: token,
       },
-      body: data,
+      body: formData,
     };
 
     fetch(`http://localhost:${port}/api/users/edit/${id}`, options)
