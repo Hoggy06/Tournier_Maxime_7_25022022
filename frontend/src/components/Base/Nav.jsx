@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { Button, Navbar } from "react-bulma-components";
-import Logo from "../../assets/images/logo/icon-left-font-monochrome-white.svg";
+import Logo from "../../assets/images/icon-left-font-monochrome-white.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
