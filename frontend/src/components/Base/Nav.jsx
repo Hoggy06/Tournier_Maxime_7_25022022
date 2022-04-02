@@ -20,9 +20,15 @@ export default function Nav() {
     <Fragment>
       <Navbar fixed="top" color="dark">
         <Navbar.Brand>
-          <Navbar.Item href="/">
-            <img src={Logo} alt="Logo Groupomania" />
-          </Navbar.Item>
+          {userConnected ? (
+            <Navbar.Item href="/feeds">
+              <img src={Logo} alt="Logo Groupomania" />
+            </Navbar.Item>
+          ) : (
+            <Navbar.Item href="/">
+              <img src={Logo} alt="Logo Groupomania" />
+            </Navbar.Item>
+          )}
           <Navbar.Burger
             onClick={toggleClass}
             className={burger ? `is-active` : null}
