@@ -17,7 +17,6 @@ exports.editUser = (req, res, next) => {
       if (user.id !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
       }
-
       const userObject = req.file
         ? {
             firstname: req.body.firstname,
@@ -32,6 +31,7 @@ exports.editUser = (req, res, next) => {
             lastname: req.body.lastname,
             email: encryptEmail(req.body.email),
           };
+
       user
         .update({
           ...userObject,
@@ -53,7 +53,15 @@ exports.getOneUser = (req, res, next) => {
   Users.hasMany(Likes);
   const options = {
     where: { id: req.params.id },
-    attributes: ["id", "firstname", "lastname", "image", "isAdmin", "created"],
+    attributes: [
+      "id",
+      "firstname",
+      "lastname",
+      "image",
+      "email",
+      "isAdmin",
+      "created",
+    ],
     include: [
       {
         model: Posts,
