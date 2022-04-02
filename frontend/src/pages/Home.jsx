@@ -1,8 +1,11 @@
 import "../styles/App.css";
 import Nav from "../components/Base/Nav";
+import Footer from "../components/Base/Footer";
 import { Fragment } from "react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import TabsFunction from "../components/Tabs/TabsFunction";
+import { Columns, Image } from "react-bulma-components";
+import Logo from "../assets/images/icon-above-font.svg";
 
 export default function Home() {
   return (
@@ -13,9 +16,15 @@ export default function Home() {
         </Helmet>
       </HelmetProvider>
       <Nav />
-      <main className="column is-full-mobile is-half-tablet is-4-desktop is-offset-4-desktop is-offset-3-tablet">
+      <Columns.Column
+        mobile={{ size: 12 }}
+        tablet={{ size: 8, offset: 2 }}
+        desktop={{ size: 4, offset: 4 }}
+      >
+        <Image size={"16by9"} src={Logo} alt="Groupomania" />
         <TabsFunction />
-      </main>
+      </Columns.Column>
+      <Footer />
     </Fragment>
   );
 }
