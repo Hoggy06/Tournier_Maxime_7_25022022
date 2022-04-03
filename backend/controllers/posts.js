@@ -128,7 +128,7 @@ exports.deletePost = (req, res, next) => {
         Posts.findOne({ where: { id: req.params.id } })
           .then((post) => {
             //L'utilisateur doit etre l'auteur du post pour supprimer
-            if (post.userId !== req.auth.userId) {
+            if (post.userId !== req.auth.userId && req.auth.isAdmin === false) {
               return res.status(403).json({ error: "Accès non autorisé" });
             }
             //Suppression de l'image dans le dossier images

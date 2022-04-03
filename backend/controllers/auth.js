@@ -101,13 +101,18 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             userId: user.id,
             isAdmin: user.isAdmin,
-            token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, {
-              expiresIn: maxAge,
-            }),
+            token: jwt.sign(
+              { userId: user.id, isAdmin: user.isAdmin },
+              process.env.TOKEN_KEY,
+              {
+                expiresIn: maxAge,
+              }
+            ),
           });
         })
         .catch((error) => res.status(500).json({ error }));
     })
     //Gestion de l'erreur en 500 (server response)
     .catch((error) => res.status(500).json({ error }));
+  console.log(res);
 };

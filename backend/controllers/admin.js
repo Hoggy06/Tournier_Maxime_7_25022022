@@ -9,7 +9,7 @@ exports.setAdmin = (req, res) => {
     where: { id: req.params.id },
   })
     .then((user) => {
-      if (req.auth.userId) {
+      if (req.auth.userId && req.auth.isAdmin === true) {
         if (user.isAdmin === false) {
           Users.update({ isAdmin: true }, { where: { id: req.params.id } });
           res
