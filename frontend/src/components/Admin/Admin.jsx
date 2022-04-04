@@ -42,15 +42,16 @@ export default function Admin() {
             {data.users?.map((i, index) => {
               const handleSubmit = (e) => {
                 e.preventDefault();
-                const data = { isAdmin };
+                const formData = { isAdmin };
                 const options = {
                   method: "POST",
                   headers: {
                     Authorization: token,
                     "Content-Type": "application/json",
                   },
-                  body: JSON.stringify(data),
+                  body: JSON.stringify(formData),
                 };
+                i.isAdmin = formData;
                 fetch(
                   `http://localhost:${port}/api/admin/users/${i.id}/setAdmin`,
                   options
