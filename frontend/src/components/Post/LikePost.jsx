@@ -1,3 +1,4 @@
+//Importations
 import { Fragment, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -5,11 +6,12 @@ import { Link } from "react-router-dom";
 import { port } from "../../port";
 
 export default function LikePost(props) {
+  //State + localstorage
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [likePost, setLikePost] = useState(false);
   const [likes, setLikes] = useState([]);
-
+  //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = { likePost };
@@ -26,6 +28,7 @@ export default function LikePost(props) {
       .then(() => setLikePost(!likePost))
       .catch((error) => console.log(error));
   };
+  //Récupération des likes
   useEffect(() => {
     fetch(`http://localhost:${port}/api/posts/${props.idPost}/like/`, {
       method: "GET",
@@ -37,6 +40,7 @@ export default function LikePost(props) {
       .then((res) => setLikes(res))
       .catch((error) => console.log(error));
   }, [token, likePost, props.idPost]);
+  //Affichage des likes
   return (
     <Fragment>
       {likePost ? (

@@ -1,12 +1,11 @@
-//constation des dependances
+//Dependances
 const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
 const path = require("path");
-const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const { connectToDatabase, sync } = require("./config/database.js");
-
+//Routes
 const authRoutes = require("./routes/auth.js");
 const usersRoutes = require("./routes/users.js");
 const postsRoutes = require("./routes/posts.js");
@@ -32,12 +31,11 @@ app.use((req, res, next) => {
   );
   next();
 });
-
+//Connexion + sync de la bdd
 connectToDatabase();
 sync();
 
 app.use(express.json());
-app.use(cookieParser());
 
 //Middleware pour le dossier images
 app.use("/images", express.static(path.join(__dirname, "images")));

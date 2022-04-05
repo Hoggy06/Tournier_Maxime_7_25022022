@@ -1,13 +1,15 @@
+//Importations
 import { Fragment, useState } from "react";
 import { Tabs } from "react-bulma-components";
 import LoginForm from "../Auth/LoginForm";
 import SignUpForm from "../Auth/SignUpForm";
 export default function TabsFunction() {
+  //Data des tabs
   const data = [
     { id: "1", tabTitle: "Connexion", tabContent: <LoginForm /> },
     { id: "2", tabTitle: "Inscription", tabContent: <SignUpForm /> },
   ];
-
+  //Fonction tab qui retourne les deux formulaires Login + SignUp
   const Tab = () => {
     const [visibleTab, setVisibleTab] = useState(data[0].id);
 

@@ -1,3 +1,4 @@
+//Importations
 import { Fragment, useState } from "react";
 import { Button, Navbar } from "react-bulma-components";
 import Logo from "../../assets/images/icon-left-font-monochrome-white.svg";
@@ -6,16 +7,17 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function Nav() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
+  //Burger pour la navigation sur mobile et tablette
   const [burger, setBurger] = useState(false);
-
+  //Fonction de deconnexion
   const logout = () => {
     localStorage.clear();
   };
-
+  //Call to action burger
   const toggleClass = () => {
     setBurger(!burger);
   };
-
+  //Navbar pour la navigation
   return (
     <Fragment>
       <Navbar fixed="top" color="dark">

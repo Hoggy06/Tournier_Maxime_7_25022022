@@ -1,14 +1,16 @@
+//Importations
 import { Fragment, useEffect, useState } from "react";
 import { Table, Box, Tag, Button } from "react-bulma-components";
 import moment from "moment";
 import { port } from "../../port";
 import { Link } from "react-router-dom";
 export default function Admin() {
+  //Localstorage + states
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [data, setData] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
-
+  //Récupérations des users
   useEffect(() => {
     fetch(`http://localhost:${port}/api/admin/users/`, {
       method: "GET",
@@ -21,7 +23,7 @@ export default function Admin() {
       .then((data) => setData(data))
       .catch((error) => console.log(error));
   }, [token]);
-
+  //Tableau récapitulatif des infos des membres
   return (
     <Fragment>
       <Box>

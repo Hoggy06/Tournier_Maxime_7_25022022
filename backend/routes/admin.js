@@ -11,7 +11,7 @@ const adminCtrl = require("../controllers/admin.js");
 const userCtrl = require("../controllers/users.js");
 const postCtrl = require("../controllers/posts.js");
 const commentCtrl = require("../controllers/comments.js");
-
+//ROUTES
 router.post("/users/:id/setAdmin", auth, adminCtrl.setAdmin);
 router.get("/users", auth, userCtrl.getAllUsers);
 

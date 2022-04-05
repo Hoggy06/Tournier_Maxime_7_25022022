@@ -1,3 +1,4 @@
+//Importations
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +13,7 @@ export default function OnePost() {
   const [data, setData] = useState({});
   //const [deletePost, setDeletePost] = useState(false);
   const { id } = useParams();
+  //Récupération d'un post
   useEffect(() => {
     fetch(`http://localhost:${port}/api/posts/${id}`, {
       method: "GET",
@@ -24,7 +26,7 @@ export default function OnePost() {
       .then((data) => setData(data))
       .catch((error) => console.log(error));
   }, [id, token]);
-
+  //Affichage d'un post
   return (
     <Box>
       <Media>

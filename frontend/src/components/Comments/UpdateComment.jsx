@@ -1,3 +1,4 @@
+//Importations
 import { Fragment, useEffect, useState } from "react";
 import {
   Form,
@@ -15,6 +16,7 @@ import moment from "moment";
 import { port } from "../../port";
 
 export default function UpdateComment() {
+  //States + localstorage
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [message, setMessage] = useState("");
@@ -23,7 +25,7 @@ export default function UpdateComment() {
   const { id, idPost } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState({});
-
+  //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = { message };
@@ -46,6 +48,7 @@ export default function UpdateComment() {
       })
       .catch((error) => console.log(error));
   };
+  //Récupération du commentaire à éditer
   useEffect(() => {
     fetch(`http://localhost:${port}/api/posts/${idPost}/comment/${id}`, {
       method: "GET",
@@ -57,6 +60,7 @@ export default function UpdateComment() {
       .then((res) => setData(res))
       .catch((error) => console.log(error));
   }, [idPost, id, token]);
+  //Affichage du commentaire + formulaire
   return (
     <Fragment>
       {userConnected.userId === data.userId ? (

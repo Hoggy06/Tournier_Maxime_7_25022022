@@ -1,3 +1,4 @@
+//Importations
 import "../styles/App.css";
 import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
@@ -7,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { Columns } from "react-bulma-components";
 import User from "../components/Profil/User.jsx";
 export default function Publication() {
+  //Corps de la page Profil
   const { id } = useParams();
   return (
     <Fragment>

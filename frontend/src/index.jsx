@@ -1,3 +1,4 @@
+//Importations
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -11,6 +12,7 @@ import UpdateOnePost from "./pages/UpdateOnePost";
 import UpdateOneComment from "./pages/UpdateOneComment";
 import Profil from "./pages/Profil";
 import Admin from "./pages/Admin";
+//Routes
 ReactDOM.render(
   <React.StrictMode>
     <Router>

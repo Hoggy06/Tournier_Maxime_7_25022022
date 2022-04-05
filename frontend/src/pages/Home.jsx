@@ -1,3 +1,4 @@
+//Importations
 import "../styles/App.css";
 import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
@@ -6,7 +7,7 @@ import { HelmetProvider, Helmet } from "react-helmet-async";
 import TabsFunction from "../components/Tabs/TabsFunction";
 import { Columns, Image } from "react-bulma-components";
 import Logo from "../assets/images/icon-above-font.svg";
-
+//Corps de la page Home
 export default function Home() {
   return (
     <Fragment>

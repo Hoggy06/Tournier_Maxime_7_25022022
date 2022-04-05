@@ -120,14 +120,14 @@ exports.editPost = (req, res, next) => {
       res.status(400).json({ error });
     });
 };
-
+//Suppression du post
 exports.deletePost = (req, res, next) => {
   Likes.destroy({ where: { postId: req.params.id } })
     .then(() => {
       Comments.destroy({ where: { postId: req.params.id } }).then(() => {
         Posts.findOne({ where: { id: req.params.id } })
           .then((post) => {
-            //L'utilisateur doit etre l'auteur du post pour supprimer
+            //L'utilisateur doit etre l'auteur du post pour supprimer ou admin
             if (post.userId !== req.auth.userId && req.auth.isAdmin === false) {
               return res.status(403).json({ error: "Accès non autorisé" });
             }

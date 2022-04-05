@@ -1,3 +1,4 @@
+//Importations
 import { Fragment, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -14,6 +15,7 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { port } from "../../port";
 
 export default function Comments() {
+  //States + localstorage
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [message, setMessage] = useState("");
@@ -22,6 +24,7 @@ export default function Comments() {
   const [data, setData] = useState([]);
   const [deleteComment, setdeleteComment] = useState(false);
   moment.locale("fr");
+  //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = { message };
@@ -51,7 +54,7 @@ export default function Comments() {
       .catch((error) => console.log(error));
     setMessage("");
   };
-
+  //Récupération des commentaires
   useEffect(() => {
     fetch(`http://localhost:${port}/api/posts/${id}/comments`, {
       method: "GET",
@@ -64,7 +67,7 @@ export default function Comments() {
       .then((data) => setData(data))
       .catch((error) => console.log(error));
   }, [id, token]);
-
+  //Affichage du formulaire
   return (
     <Fragment>
       <Box>
@@ -95,6 +98,7 @@ export default function Comments() {
           </Media>
         </form>
       </Box>
+      {/**Suppression des commentaires */}
       {data.map((i, index) => {
         const handleSubmit = (e) => {
           e.preventDefault();
@@ -122,6 +126,7 @@ export default function Comments() {
             .catch((error) => console.log(error));
           setdeleteComment(!deleteComment);
         };
+        //Affichage des commentaires
         return (
           <Box key={index}>
             <Media>

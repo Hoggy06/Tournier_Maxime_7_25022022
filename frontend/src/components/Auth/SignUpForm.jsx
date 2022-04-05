@@ -1,3 +1,4 @@
+//Importations
 import { useState } from "react";
 import { port } from "../../port";
 import { Form, Button } from "react-bulma-components";
@@ -9,17 +10,18 @@ import {
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 export default function SignUpForm() {
+  //States
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-
+  //regex
   const regexFirstnameAndLastname = /^[a-zA-Z\s-]{3,35}$/;
   const regexEmail = /^([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})$/;
   const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
-
+  //Modifications des states
   const onFirstnameChange = (e) => {
     setFirstname(e.target.value);
   };
@@ -32,7 +34,7 @@ export default function SignUpForm() {
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
-
+  //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = { firstname, lastname, email, password };
@@ -55,7 +57,7 @@ export default function SignUpForm() {
       })
       .catch((error) => console.log(error));
   };
-
+  //Formulaire d'inscription
   return (
     <form onSubmit={handleSubmit}>
       <Form.Field>
@@ -196,7 +198,7 @@ export default function SignUpForm() {
           </Button>
         </Form.Control>
       </Form.Field>
-
+      {/**Gestion des erreurs */}
       {success ? (
         <Form.Help align="center" textSize="6" color="success">
           {success}

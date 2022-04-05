@@ -1,3 +1,4 @@
+//Importations
 import "../styles/App.css";
 import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
@@ -8,6 +9,7 @@ import Comments from "../components/Comments/Comments";
 import { useParams } from "react-router-dom";
 import { Columns } from "react-bulma-components";
 export default function Publication() {
+  //Corps de la page des publications
   const { id } = useParams();
   return (
     <Fragment>

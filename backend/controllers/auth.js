@@ -1,5 +1,3 @@
-//Imporatation de bcrypt, jsonwebtoken et du model User
-//const query = Users.Sequelize;
 const dotenv = require("dotenv");
 dotenv.config();
 const { Sequelize, DataTypes } = require("sequelize");
@@ -13,6 +11,7 @@ const { encryptEmail } = require("../middlewares/crypto.js");
 
 //Fonction signup
 exports.signup = (req, res, next) => {
+  //Vérification des champs + regex
   if (
     req.body.firstname === "" &&
     req.body.lastname === "" &&
@@ -54,6 +53,7 @@ exports.signup = (req, res, next) => {
       error: `Le mot de passe doit contenir au moins : 8 caractères minimum, une majuscule, une minuscule, un chiffre, et aucun espace`,
     });
   }
+  //On rentre les différents champs en bdd
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {

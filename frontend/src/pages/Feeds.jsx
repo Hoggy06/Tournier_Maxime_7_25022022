@@ -1,3 +1,4 @@
+//Importations
 import "../styles/App.css";
 import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
@@ -5,7 +6,7 @@ import { Fragment } from "react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Posts from "../components/Post/Feeds";
 import { Columns, Message } from "react-bulma-components";
-
+//Corps de la pge Feeds
 export default function Feeds() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   return (

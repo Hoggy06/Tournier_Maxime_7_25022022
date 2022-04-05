@@ -1,3 +1,4 @@
+//Importations
 import "../styles/App.css";
 import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
@@ -8,6 +9,7 @@ import Admin from "../components/Admin/Admin";
 
 export default function Feeds() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
+  //Corps de la page Admin
   return (
     <Fragment>
       <HelmetProvider>

@@ -3,7 +3,7 @@ dotenv.config();
 const { Sequelize, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database.js");
 const Users = require("../models/Users.js")(sequelize, DataTypes);
-
+//Maj du statut admin pour un utilisateur
 exports.setAdmin = (req, res) => {
   Users.findOne({
     where: { id: req.params.id },
