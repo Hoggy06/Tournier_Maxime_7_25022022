@@ -8,24 +8,27 @@ const Comments = require("../models/Comments.js")(sequelize, DataTypes);
 const Likes = require("../models/Likes.js")(sequelize, DataTypes);
 const bcrypt = require("bcrypt");
 const fs = require("fs");
-
+//Edition d'un utilisateur
 exports.editUser = (req, res, next) => {
   Users.findOne({
     where: { id: req.params.id },
   })
     .then((user) => {
+      //On doit etre propriétaire pour pouvoir éditer
       if (user.id !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
       }
       const userObject = req.file
-        ? {
+        ? //Si édition du profil avec un fichier image
+          {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             image: `${req.protocol}://${req.get("host")}/images/${
               req.file.filename
             }`,
           }
-        : {
+        : //sinon on edite le reste
+          {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
           };
@@ -41,7 +44,7 @@ exports.editUser = (req, res, next) => {
       res.status(400).json({ error });
     });
 };
-
+//Recherche d'un utilisateur
 exports.getOneUser = (req, res, next) => {
   Posts.belongsTo(Users);
   Comments.belongsTo(Users);
@@ -83,7 +86,7 @@ exports.getOneUser = (req, res, next) => {
       res.status(404).json({ error: "Utilisateur non trouvé" });
     });
 };
-
+//Recherche de plusieurs utilisateurs
 exports.getAllUsers = (req, res, next) => {
   Posts.belongsTo(Users);
   Comments.belongsTo(Users);
@@ -118,7 +121,7 @@ exports.getAllUsers = (req, res, next) => {
       res.status(404).json({ error: "Impossible de trouver les utilisateurs" })
     );
 };
-
+//Suppression d'un utilisateur et de tous ses contenus
 exports.deleteOneUser = (req, res, next) => {
   Likes.destroy({ where: { userId: req.params.id } })
     .then(() =>

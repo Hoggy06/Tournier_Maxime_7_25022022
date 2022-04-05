@@ -8,7 +8,7 @@ const cryptojs = require("crypto-js");
 const EMAIL_CRYPTOJS_KEY = process.env.EMAIL_CRYPTOJS_KEY;
 
 // ---------------------- Crypto functions -------------------------
-//Pas de toString ?
+
 const encryptEmail = (email) => {
   return cryptojs.HmacSHA256(email, EMAIL_CRYPTOJS_KEY).toString();
 };

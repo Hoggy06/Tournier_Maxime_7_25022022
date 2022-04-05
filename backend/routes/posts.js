@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-
+//Controllers
 const postsCtrl = require("../controllers/posts.js");
 const commentsCtrl = require("../controllers/comments.js");
 const likesCtrl = require("../controllers/likes.js");
-
+//Middlewares
 const auth = require("../middlewares/auth.js");
 const multer = require("../middlewares/multer-config.js");
-
+//Routes
 router.post("/", auth, multer, postsCtrl.createPost);
 router.get("/", auth, postsCtrl.getAllPosts);
 router.get("/:id", auth, postsCtrl.getOnePost);

@@ -16,7 +16,7 @@ exports.createComment = (req, res, next) => {
     postId: req.params.postId,
     userId: req.auth.userId,
   })
-    //Recherche du firstname et de l'avatar dans Users
+    //Création du commentaire
     .then(() => {
       res.status(201).json({ message: "Commentaire crée" });
     })
@@ -25,7 +25,7 @@ exports.createComment = (req, res, next) => {
       res.status(400).json({ error });
     });
 };
-//Récupération de tous les commentaires d'un membres
+//Récupération de tous les commentaires d'un membre
 exports.getAllComments = (req, res, next) => {
   //Jointure de Comments et Users
   Comments.belongsTo(Users);
@@ -94,7 +94,7 @@ exports.editComment = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
   Comments.findOne({ where: { id: req.params.id } })
     .then((comment) => {
-      //Si l'utilisateur n'est pas l'auteur du commentaire = 403
+      //Si l'utilisateur n'est pas l'auteur du commentaire = 403 ou non admin
       if (comment.userId !== req.auth.userId && req.auth.isAdmin === false) {
         return res.status(403).json({ error: "Accès non autorisé" });
       } else {
