@@ -1,3 +1,4 @@
+//Importations
 import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -15,6 +16,7 @@ import "../../utils/moment";
 import { useNavigate } from "react-router-dom";
 import { port } from "../../port";
 export default function Posts() {
+  //States + localstorage
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [message, setMessage] = useState("");
@@ -25,10 +27,11 @@ export default function Posts() {
   const [data, setData] = useState([]);
   const [deletePost, setDeletePost] = useState(false);
   const navigate = useNavigate();
-
+  //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
+    //Vérification des champs
     if (message !== "") {
       data.append("message", message);
     }
@@ -43,7 +46,7 @@ export default function Posts() {
       },
       body: data,
     };
-
+    //Création d'un post
     fetch(`http://localhost:${port}/api/posts/`, options)
       .then((response) => response.json())
       .then((res) => {
@@ -65,7 +68,7 @@ export default function Posts() {
     setMessage("");
     setImage("");
   };
-
+  //Récupération des posts
   useEffect(() => {
     fetch(`http://localhost:${port}/api/posts`, {
       method: "GET",
@@ -78,10 +81,11 @@ export default function Posts() {
       .then((data) => setData(data))
       .catch((error) => console.log(error));
   }, [token]);
-
+  //Affichage des posts
   return (
     <Fragment>
       <Box>
+        {/**Formulaire de création de post */}
         <form onSubmit={handleSubmit}>
           <Media renderAs="article">
             <Media.Item align="center">
@@ -127,6 +131,7 @@ export default function Posts() {
           {error}
         </Form.Help>
       </Box>
+      {/**Suppression d'un post */}
       {data.map((i, index) => {
         const handleDelete = (e) => {
           e.preventDefault();
@@ -157,6 +162,7 @@ export default function Posts() {
             .catch((error) => console.log(error));
           setDeletePost(!deletePost);
         };
+        //Affichage des posts
         return (
           <Box key={index}>
             <Media>

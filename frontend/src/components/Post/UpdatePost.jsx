@@ -1,3 +1,4 @@
+//Importations
 import { useState, Fragment, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
@@ -17,6 +18,7 @@ import moment from "moment";
 import { port } from "../../port";
 
 export default function UpdatePost() {
+  //States + localstorage
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [message, setMessage] = useState("");
@@ -27,10 +29,11 @@ export default function UpdatePost() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState({});
-
+  //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
+    //Vérification des champs
     if (message !== "") {
       data.append("message", message);
     }
@@ -44,7 +47,7 @@ export default function UpdatePost() {
       },
       body: data,
     };
-
+    //Modification du post
     fetch(`http://localhost:${port}/api/posts/${id}`, options)
       .then((response) => response.json())
       .then((res) => {
@@ -57,7 +60,7 @@ export default function UpdatePost() {
       })
       .catch((error) => console.log(error));
   };
-
+  //Récupération du post
   useEffect(() => {
     fetch(`http://localhost:${port}/api/posts/${id}`, {
       method: "GET",
@@ -75,7 +78,7 @@ export default function UpdatePost() {
       })
       .catch((error) => console.log(error));
   }, [id, token, userConnected, data]);
-
+  //Affichage du post à éditer
   return (
     <Fragment>
       {userConnected && userConnected.userId === data.userId ? (
@@ -106,6 +109,7 @@ export default function UpdatePost() {
             </Media>
           </Box>
           <Box>
+            {/**Formulaire pour l'édition */}
             <form onSubmit={handleSubmit}>
               <Media renderAs="article">
                 <Media.Item align="center">
@@ -156,6 +160,7 @@ export default function UpdatePost() {
           </Box>{" "}
         </Fragment>
       ) : (
+        //Gestion des erreurs
         <Message color="danger">
           <Message.Header>
             <span>Erreur</span>
