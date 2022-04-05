@@ -30,7 +30,7 @@ function connectToDatabase(err) {
     console.error(err);
   } else {
     sequelize.authenticate();
-    console.log("Connection to database has been established successfully.");
+    console.log("Connection to database has been established successfully");
   }
 }
 //Sync de la bdd
@@ -40,7 +40,7 @@ function sync(err) {
   } else {
     sequelize
       .sync({ alter: true })
-      .then(() => console.log("Synchronization was successful"));
+      .then(() => console.log("Synchronization was successfull"));
   }
 }
 
