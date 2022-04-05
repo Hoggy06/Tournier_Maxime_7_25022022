@@ -102,7 +102,10 @@ export default function UpdateComment() {
                   </Form.Field>
                   <Form.Field>
                     <Form.Control>
-                      <Button color="link" disabled={!userConnected}>
+                      <Button
+                        color="link"
+                        disabled={!userConnected || !message}
+                      >
                         Editer
                       </Button>
                     </Form.Control>
