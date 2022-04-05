@@ -1,3 +1,4 @@
+//Importations
 import { Fragment, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -21,6 +22,7 @@ import {
 import { port } from "../../port";
 
 export default function Comments() {
+  //Localstorage + states
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [data, setData] = useState({});
@@ -34,15 +36,18 @@ export default function Comments() {
   const [success, setSuccess] = useState("");
   const [isDeleteUser, setIsDeleteUser] = useState(false);
   const navigate = useNavigate();
+  //Modification des states
   const onFirstnameChange = (e) => {
     setFirstname(e.target.value);
   };
   const onLastnameChange = (e) => {
     setLastname(e.target.value);
   };
+  //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
+    //Verifications des champs
     if (firstname !== "") {
       formData.append("firstname", firstname);
     }
@@ -55,9 +60,7 @@ export default function Comments() {
     if (image === "" && firstname === "" && lastname === "") {
       return setError("Veuillez renseigner au moins un champs");
     }
-
-    console.log(data.user.email);
-
+    //Modifcation du profil
     const options = {
       method: "PUT",
       headers: {
@@ -90,11 +93,11 @@ export default function Comments() {
     setLastname("");
     setImage("");
   };
-
+  //Call to action suppression du membre
   const deleteAction = () => {
     setIsDeleteUser(!isDeleteUser);
   };
-
+  //Soumission pour la suppression
   const handleDelete = (e) => {
     e.preventDefault();
     const options = {
@@ -124,6 +127,7 @@ export default function Comments() {
       })
       .catch((error) => console.log(error));
   };
+  //Récupération des data du membre
   useEffect(() => {
     fetch(`http://localhost:${port}/api/users/${id}`, {
       method: "GET",
@@ -138,7 +142,7 @@ export default function Comments() {
       })
       .catch((error) => console.log(error));
   }, [id, token]);
-
+  //Affichage des infos du membre
   return (
     <Fragment>
       <Box>
@@ -186,6 +190,7 @@ export default function Comments() {
           </Media.Item>
         </Media>
       </Box>
+      {/**Formulaire d'édition */}
       {data.user && userConnected.userId === data.user.id ? (
         <Box>
           <form onSubmit={handleSubmit}>
@@ -283,6 +288,7 @@ export default function Comments() {
                 </Form.Field>
               </Media.Item>
             </Media>
+            {/**Gestion des erreurs */}
             {success ? (
               <Form.Help align="center" textSize="6" color="success">
                 {success}
@@ -293,6 +299,7 @@ export default function Comments() {
               </Form.Help>
             )}
           </form>
+          {/**Confirmation de la suppression */}
           <Button.Group align="center">
             <Button onClick={deleteAction} color="danger" outlined>
               Supprimer mon compte

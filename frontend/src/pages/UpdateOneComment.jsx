@@ -1,3 +1,4 @@
+//Importations
 import "../styles/App.css";
 import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
@@ -8,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { Columns } from "react-bulma-components";
 
 export default function OneComment() {
+  //Corps de la page de l'édition des commentaires
   const { id, idPost } = useParams();
   return (
     <Fragment>

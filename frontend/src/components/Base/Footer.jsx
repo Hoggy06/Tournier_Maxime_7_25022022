@@ -1,3 +1,4 @@
+//Footer pour les pages
 import { Container, Content, Hero } from "react-bulma-components";
 export default function FooterSection() {
   const newDate = new Date();

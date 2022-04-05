@@ -1,9 +1,11 @@
+//Importations
 import { Fragment } from "react";
 import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Columns, Message } from "react-bulma-components";
 export default function PageNotFound() {
+  //Corps de la page 404
   return (
     <Fragment>
       <HelmetProvider>

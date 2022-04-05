@@ -1,3 +1,4 @@
+//Importations
 import { Form, Button } from "react-bulma-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
@@ -6,17 +7,19 @@ import { useNavigate } from "react-router-dom";
 import { port } from "../../port";
 
 export default function LoginForm() {
+  //States + redirection
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  //Modifications des states
   const onEmailChange = (e) => {
     setEmail(e.target.value);
   };
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
+  //Gestion des erreurs
   const errorMessage = () => {
     return (
       <div
@@ -30,6 +33,7 @@ export default function LoginForm() {
       </div>
     );
   };
+  //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = { email, password };
@@ -53,6 +57,7 @@ export default function LoginForm() {
       })
       .catch((error) => console.log(error));
   };
+  //Formulaire de connexion
   return (
     <form onSubmit={handleSubmit}>
       <Form.Field>
