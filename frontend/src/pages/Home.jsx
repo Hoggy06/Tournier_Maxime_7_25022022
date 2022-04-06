@@ -22,7 +22,7 @@ export default function Home() {
         tablet={{ size: 8, offset: 2 }}
         desktop={{ size: 4, offset: 4 }}
       >
-        <Image size={"16by9"} src={Logo} alt="Groupomania" />
+        <Image size={"3by1"} src={Logo} alt="Groupomania" />
         <TabsFunction />
       </Columns.Column>
       <Footer />
