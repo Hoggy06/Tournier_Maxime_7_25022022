@@ -29,6 +29,24 @@ export default function UpdatePost() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState({});
+  //Récupération du post
+  useEffect(() => {
+    fetch(`http://localhost:${port}/api/posts/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.error) {
+          setError(res.error);
+        } else {
+          setData(res);
+        }
+      })
+      .catch((error) => console.log(error));
+  });
   //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,28 +78,12 @@ export default function UpdatePost() {
       })
       .catch((error) => console.log(error));
   };
-  //Récupération du post
-  useEffect(() => {
-    fetch(`http://localhost:${port}/api/posts/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: token,
-      },
-    })
-      .then((response) => response.json())
-      .then((res) => {
-        if (res.error) {
-          setError(res.error);
-        } else {
-          setData(res);
-        }
-      })
-      .catch((error) => console.log(error));
-  }, [id, token, userConnected, data]);
+
   //Affichage du post à éditer
+
   return (
     <Fragment>
-      {userConnected && userConnected.userId === data.userId ? (
+      {userConnected.userId === data.userId ? (
         <Fragment>
           {" "}
           <Box>
