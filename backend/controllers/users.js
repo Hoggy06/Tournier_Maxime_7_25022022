@@ -38,7 +38,14 @@ exports.editUser = (req, res, next) => {
           ...userObject,
           id: req.params.id,
         })
-        .then(() => res.status(200).json({ message: "Profil modifié" }));
+        .then(() =>
+          res
+            .status(200)
+            .json({ message: "Votre profil a été modifié avec succès !" })
+        )
+        .catch(() => {
+          res.status(400).json({ error: "Une erreur s'est produite" });
+        });
     })
     .catch((error) => {
       res.status(404).json({ error });
