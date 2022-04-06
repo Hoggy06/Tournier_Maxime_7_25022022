@@ -12,6 +12,7 @@ import {
   Button,
   Level,
   Heading,
+  Message,
 } from "react-bulma-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -35,6 +36,13 @@ export default function Comments() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isDeleteUser, setIsDeleteUser] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(false);
+
+  //Call to action suppression du message d'alerte
+  const deleteAlertMessage = () => {
+    setDeleteMessage(!deleteMessage);
+  };
+
   const navigate = useNavigate();
   //Modification des states
   const onFirstnameChange = (e) => {
@@ -85,7 +93,10 @@ export default function Comments() {
           },
         })
           .then((response) => response.json())
-          .then((data) => setData(data))
+          .then((data) => {
+            setData(data);
+            setDeleteMessage(!deleteMessage);
+          })
           .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
@@ -141,7 +152,7 @@ export default function Comments() {
         setData(data);
       })
       .catch((error) => console.log(error));
-  }, [id, token]);
+  }, [id, token, data, userConnected]);
   //Affichage des infos du membre
   return (
     <Fragment>
@@ -174,7 +185,7 @@ export default function Comments() {
                 Inscrit depuis le{" "}
                 {data.user && moment(data.user.created).format("DD/MM/YYYY")}
               </p>
-              <Level>
+              <Level breakpoint="mobile">
                 <Level.Item>
                   <Heading size={5} subtitle>
                     {data.user && data.user.Posts.length} Posts
@@ -190,6 +201,25 @@ export default function Comments() {
           </Media.Item>
         </Media>
       </Box>
+      {/**Gestion des erreurs */}
+      {success && deleteMessage ? (
+        <Message color="success">
+          <Message.Header>
+            <span>Succès</span>
+            <Button onClick={deleteAlertMessage} remove />
+          </Message.Header>
+          <Message.Body>{success}</Message.Body>
+        </Message>
+      ) : null}
+      {error && deleteMessage ? (
+        <Message color="danger">
+          <Message.Header>
+            <span>Erreur</span>
+            <Button onClick={deleteAlertMessage} remove />
+          </Message.Header>
+          <Message.Body>{error}</Message.Body>
+        </Message>
+      ) : null}
       {/**Formulaire d'édition */}
       {data.user && userConnected.userId === data.user.id ? (
         <Box>
@@ -288,16 +318,6 @@ export default function Comments() {
                 </Form.Field>
               </Media.Item>
             </Media>
-            {/**Gestion des erreurs */}
-            {success ? (
-              <Form.Help align="center" textSize="6" color="success">
-                {success}
-              </Form.Help>
-            ) : (
-              <Form.Help align="center" textSize="6" color="danger">
-                {error}
-              </Form.Help>
-            )}
           </form>
           {/**Confirmation de la suppression */}
           <Button.Group align="center">

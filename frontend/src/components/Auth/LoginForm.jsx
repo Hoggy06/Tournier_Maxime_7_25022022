@@ -1,5 +1,5 @@
 //Importations
-import { Form, Button } from "react-bulma-components";
+import { Form, Button, Message } from "react-bulma-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
@@ -12,6 +12,12 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [deleteMessage, setDeleteMessage] = useState(false);
+
+  //Call to action suppression du message d'alerte
+  const deleteAlertMessage = () => {
+    setDeleteMessage(!deleteMessage);
+  };
   //Modifications des states
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -51,6 +57,7 @@ export default function LoginForm() {
         localStorage.setItem("userConnected", JSON.stringify(res));
         if (res.error) {
           setError(res.error);
+          setDeleteMessage(!deleteMessage);
         } else {
           navigate("/feeds");
         }
@@ -97,7 +104,15 @@ export default function LoginForm() {
           <Button color="link">Se connecter</Button>
         </Form.Control>
       </Form.Field>
-      {errorMessage()}
+      {deleteMessage ? (
+        <Message color="danger">
+          <Message.Header>
+            <span>Erreur</span>
+            <Button onClick={deleteAlertMessage} remove />
+          </Message.Header>
+          <Message.Body>{errorMessage()}</Message.Body>
+        </Message>
+      ) : null}
     </form>
   );
 }

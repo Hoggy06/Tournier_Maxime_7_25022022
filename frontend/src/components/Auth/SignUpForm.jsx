@@ -1,7 +1,7 @@
 //Importations
 import { useState } from "react";
 import { port } from "../../port";
-import { Form, Button } from "react-bulma-components";
+import { Form, Button, Message } from "react-bulma-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEnvelope,
@@ -17,10 +17,16 @@ export default function SignUpForm() {
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [deleteMessage, setDeleteMessage] = useState(false);
   //regex
   const regexFirstnameAndLastname = /^[a-zA-Z\s-]{3,35}$/;
   const regexEmail = /^([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})$/;
   const regexPassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+
+  //Call to action suppression du message d'alerte
+  const deleteAlertMessage = () => {
+    setDeleteMessage(!deleteMessage);
+  };
   //Modifications des states
   const onFirstnameChange = (e) => {
     setFirstname(e.target.value);
@@ -51,8 +57,10 @@ export default function SignUpForm() {
       .then((res) => {
         if (res.message) {
           setSuccess(res.message);
+          setDeleteMessage(!deleteMessage);
         } else {
           setError(res.error);
+          setDeleteMessage(!deleteMessage);
         }
       })
       .catch((error) => console.log(error));
@@ -199,15 +207,24 @@ export default function SignUpForm() {
         </Form.Control>
       </Form.Field>
       {/**Gestion des erreurs */}
-      {success ? (
-        <Form.Help align="center" textSize="6" color="success">
-          {success}
-        </Form.Help>
-      ) : (
-        <Form.Help align="center" textSize="6" color="danger">
-          {error}
-        </Form.Help>
-      )}
+      {success && deleteMessage ? (
+        <Message color="success">
+          <Message.Header>
+            <span>Succès</span>
+            <Button onClick={deleteAlertMessage} remove />
+          </Message.Header>
+          <Message.Body>{success}</Message.Body>
+        </Message>
+      ) : null}
+      {error && deleteMessage ? (
+        <Message color="danger">
+          <Message.Header>
+            <span>Erreur</span>
+            <Button onClick={deleteAlertMessage} remove />
+          </Message.Header>
+          <Message.Body>{error}</Message.Body>
+        </Message>
+      ) : null}
     </form>
   );
 }

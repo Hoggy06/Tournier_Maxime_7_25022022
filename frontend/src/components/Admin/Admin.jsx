@@ -10,6 +10,11 @@ export default function Admin() {
   const token = `Bearer ${userConnected.token}`;
   const [data, setData] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isDeleteUser, setIsDeleteUser] = useState(false);
+  //Call to action suppression du membre
+  const deleteAction = () => {
+    setIsDeleteUser(!isDeleteUser);
+  };
   //Récupérations des users
   useEffect(() => {
     fetch(`http://localhost:${port}/api/admin/users/`, {
@@ -68,9 +73,11 @@ export default function Admin() {
                       },
                     })
                       .then((response) => response.json())
-                      .then((data) => setData(data))
+                      .then((data) => {
+                        setData(data);
+                        setIsAdmin(!isAdmin);
+                      })
                       .catch((error) => console.log(error));
-                    setIsAdmin(!isAdmin);
                   })
                   .catch((error) => console.log(error));
               };
@@ -97,7 +104,10 @@ export default function Admin() {
                       },
                     })
                       .then((response) => response.json())
-                      .then((data) => setData(data))
+                      .then((data) => {
+                        setData(data);
+                        setIsDeleteUser(!isDeleteUser);
+                      })
                       .catch((error) => console.log(error));
                   })
                   .catch((error) => console.log(error));
@@ -152,14 +162,58 @@ export default function Admin() {
                       </td>
                       <td>
                         <Fragment>
-                          <Button
-                            onClick={handleDelete}
-                            color="danger"
-                            outlined
-                            size="small"
-                          >
-                            Supprimer
-                          </Button>
+                          {/**Confirmation de la suppression */}
+
+                          <Button.Group align="center">
+                            <Button
+                              onClick={deleteAction}
+                              color="danger"
+                              outlined
+                              size="small"
+                            >
+                              Supprimer
+                            </Button>
+                            {isDeleteUser ? (
+                              <div
+                                className={
+                                  isDeleteUser ? "modal is-active" : "modal"
+                                }
+                              >
+                                <div className="modal-background"></div>
+                                <div className="modal-content">
+                                  <div className="modal-card">
+                                    <header className="modal-card-head">
+                                      <p className="modal-card-title">
+                                        Suppression du compte #{i.id}
+                                      </p>
+                                    </header>
+                                    <section className="modal-card-body">
+                                      <p>
+                                        Cette action est irréversible. La
+                                        suppression de votre compte entrainera
+                                        la perte définitive de vos données.
+                                        Êtes-vous sûr de vouloir continuer ?
+                                      </p>
+                                    </section>
+                                    <footer className="modal-card-foot">
+                                      <button
+                                        onClick={handleDelete}
+                                        className="button is-danger"
+                                      >
+                                        Supprimer
+                                      </button>
+                                      <button
+                                        onClick={deleteAction}
+                                        className="button"
+                                      >
+                                        Annuler
+                                      </button>
+                                    </footer>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : null}
+                          </Button.Group>
                         </Fragment>
                       </td>
                     </tr>
