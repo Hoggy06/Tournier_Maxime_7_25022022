@@ -46,7 +46,7 @@ export default function UpdatePost() {
         }
       })
       .catch((error) => console.log(error));
-  });
+  }, [id, token]);
   //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
