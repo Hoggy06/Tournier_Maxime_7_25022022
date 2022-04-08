@@ -31,3 +31,22 @@ Le `.env.example` vous permettra d'avoir plus de précision quand à la marche �
 Lancer `npm install` dans le dossier backend.
 
 Puis `npm start` pour lancer l'`API`.
+
+## Objectif
+
+- La présentation des fonctionnalités doit être simple
+
+- La création d’un compte doit être simple et possible depuis un téléphone mobile
+
+- Le profil doit contenir très peu d’informations pour que sa complétion soit rapide
+
+- La suppression du compte doit être possible
+
+- L’accès à un forum où les salariés publient des contenus multimédias doit être présent
+
+- L’accès à un forum où les salariés publient des textes doit être présent
+
+- Les utilisateurs doivent pouvoir facilement repérer les dernières participations des employés
+
+- Le ou la chargé-e de communication Groupomania doit pouvoir modérer les interactions entre
+  salariés
