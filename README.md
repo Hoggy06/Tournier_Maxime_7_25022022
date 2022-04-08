@@ -12,9 +12,9 @@ Le projet consiste à construire un réseau social interne pour les employés de
 
 ### Installation
 
-Dans le fichier src/port.js renseignez le port sur lequel vous aller utiliser l'application.
+Dans le fichier `src/port.js` renseignez le port sur lequel vous aller utiliser l'application.
 
-Par défaut il est sur 3307 si vous utiliser MariaDB sinon 3306 pour MySQL.
+Par défaut il est sur `3307` si vous utiliser `MariaDB` sinon `3306` pour `MySQL`.
 
 Lancer `npm install` dans le dossier frontend.
 
@@ -24,10 +24,10 @@ Puis `npm start` pour lancer l'application.
 
 ### Installation
 
-Créer un fichier .env à la racine de ce dossier et entrez vos identifiants.
+Créer un fichier `.env` à la racine de ce dossier et entrez vos identifiants.
 
-Le .env.example vous permettra d'avoir plus de précision quand à la marche à suivre.
+Le `.env.example` vous permettra d'avoir plus de précision quand à la marche à suivre.
 
 Lancer `npm install` dans le dossier backend.
 
-Puis `npm start` pour lancer l'API.
+Puis `npm start` pour lancer l'`API`.
