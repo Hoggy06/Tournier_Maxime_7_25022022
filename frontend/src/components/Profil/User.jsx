@@ -1,6 +1,6 @@
 //Importations
 import { Fragment, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import moment from "moment";
 import {
   Media,
@@ -21,7 +21,7 @@ import {
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { port } from "../../port";
-
+import DeleteAccount from "./DeleteAccount";
 export default function Comments() {
   //Localstorage + states
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
@@ -35,7 +35,6 @@ export default function Comments() {
   const onImageChange = (e) => setImage(e.target.files[0]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isDeleteUser, setIsDeleteUser] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(false);
 
   //Call to action suppression du message d'alerte
@@ -43,7 +42,6 @@ export default function Comments() {
     setDeleteMessage(!deleteMessage);
   };
 
-  const navigate = useNavigate();
   //Modification des states
   const onFirstnameChange = (e) => {
     setFirstname(e.target.value);
@@ -104,40 +102,7 @@ export default function Comments() {
     setLastname("");
     setImage("");
   };
-  //Call to action suppression du membre
-  const deleteAction = () => {
-    setIsDeleteUser(!isDeleteUser);
-  };
-  //Soumission pour la suppression
-  const handleDelete = (e) => {
-    e.preventDefault();
-    const options = {
-      method: "DELETE",
-      headers: {
-        Authorization: token,
-        "Content-Type": "application/json",
-      },
-    };
-    fetch(`http://localhost:${port}/api/users/${id}`, options)
-      .then((response) => response.json())
-      .then(() => {
-        fetch(`http://localhost:${port}/api/users/`, {
-          method: "GET",
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            setData(data);
-            navigate("/");
-            localStorage.clear();
-          })
-          .catch((error) => console.log(error));
-      })
-      .catch((error) => console.log(error));
-  };
+
   //Récupération des data du membre
   useEffect(() => {
     fetch(`http://localhost:${port}/api/users/${id}`, {
@@ -223,6 +188,7 @@ export default function Comments() {
       {/**Formulaire d'édition */}
       {data.user && userConnected.userId === data.user.id ? (
         <Box>
+          <Heading size={6}>Edition du profil</Heading>
           <form onSubmit={handleSubmit}>
             <Media renderAs="article">
               <Media.Item align="center">
@@ -319,42 +285,7 @@ export default function Comments() {
               </Media.Item>
             </Media>
           </form>
-          {/**Confirmation de la suppression */}
-          <Button.Group align="center">
-            <Button onClick={deleteAction} color="danger" outlined>
-              Supprimer mon compte
-            </Button>
-            {!isDeleteUser ? null : (
-              <div className={isDeleteUser ? "modal is-active" : "modal"}>
-                <div className="modal-background"></div>
-                <div className="modal-content">
-                  <div className="modal-card">
-                    <header className="modal-card-head">
-                      <p className="modal-card-title">Suppression du compte</p>
-                    </header>
-                    <section className="modal-card-body">
-                      <p>
-                        Cette action est irréversible. La suppression de votre
-                        compte entrainera la perte définitive de vos données.
-                        Êtes-vous sûr de vouloir continuer ?
-                      </p>
-                    </section>
-                    <footer className="modal-card-foot">
-                      <button
-                        onClick={handleDelete}
-                        className="button is-danger"
-                      >
-                        Supprimer
-                      </button>
-                      <button onClick={deleteAction} className="button">
-                        Annuler
-                      </button>
-                    </footer>
-                  </div>
-                </div>
-              </div>
-            )}
-          </Button.Group>
+          <DeleteAccount token={token} port={port} setData={setData} id={id} />
         </Box>
       ) : null}
     </Fragment>
