@@ -1,20 +1,17 @@
 //Importations
 import { Fragment, useEffect, useState } from "react";
-import { Table, Box, Tag, Button } from "react-bulma-components";
+import { Table, Box, Tag } from "react-bulma-components";
 import moment from "moment";
 import { port } from "../../port";
 import { Link } from "react-router-dom";
+import Modal from "./ModalDeleteAdmin";
+import IsAdmin from "./IsAdmin";
 export default function Admin() {
   //Localstorage + states
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   const token = `Bearer ${userConnected.token}`;
   const [data, setData] = useState({});
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isDeleteUser, setIsDeleteUser] = useState(false);
-  //Call to action suppression du membre
-  const deleteAction = () => {
-    setIsDeleteUser(!isDeleteUser);
-  };
+
   //Récupérations des users
   useEffect(() => {
     fetch(`http://localhost:${port}/api/admin/users/`, {
@@ -47,71 +44,6 @@ export default function Admin() {
             </thead>
 
             {data.users?.map((i, index) => {
-              const handleSubmit = (e) => {
-                e.preventDefault();
-                const formData = { isAdmin };
-                const options = {
-                  method: "POST",
-                  headers: {
-                    Authorization: token,
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(formData),
-                };
-                i.isAdmin = formData;
-                fetch(
-                  `http://localhost:${port}/api/admin/users/${i.id}/setAdmin`,
-                  options
-                )
-                  .then((response) => response.json())
-                  .then(() => {
-                    fetch(`http://localhost:${port}/api/admin/users/`, {
-                      method: "GET",
-                      headers: {
-                        Authorization: token,
-                        "Content-Type": "application/json",
-                      },
-                    })
-                      .then((response) => response.json())
-                      .then((data) => {
-                        setData(data);
-                        setIsAdmin(!isAdmin);
-                      })
-                      .catch((error) => console.log(error));
-                  })
-                  .catch((error) => console.log(error));
-              };
-              const handleDelete = (e) => {
-                e.preventDefault();
-                const options = {
-                  method: "DELETE",
-                  headers: {
-                    Authorization: token,
-                    "Content-Type": "application/json",
-                  },
-                };
-                fetch(
-                  `http://localhost:${port}/api/admin/users/${i.id}`,
-                  options
-                )
-                  .then((response) => response.json())
-                  .then(() => {
-                    fetch(`http://localhost:${port}/api/admin/users/`, {
-                      method: "GET",
-                      headers: {
-                        Authorization: token,
-                        "Content-Type": "application/json",
-                      },
-                    })
-                      .then((response) => response.json())
-                      .then((data) => {
-                        setData(data);
-                        setIsDeleteUser(!isDeleteUser);
-                      })
-                      .catch((error) => console.log(error));
-                  })
-                  .catch((error) => console.log(error));
-              };
               return (
                 <Fragment key={index}>
                   <tbody>
@@ -138,82 +70,22 @@ export default function Admin() {
                       </td>
                       <td>{moment(i.created).format("DD/MM/YYYY")}</td>
                       <td>
-                        <Fragment>
-                          {i.isAdmin === false ? (
-                            <Button
-                              onClick={handleSubmit}
-                              color="link"
-                              outlined
-                              size="small"
-                            >
-                              Ajouter
-                            </Button>
-                          ) : (
-                            <Button
-                              onClick={handleSubmit}
-                              color="link"
-                              outlined
-                              size="small"
-                            >
-                              Retirer
-                            </Button>
-                          )}
-                        </Fragment>
+                        <IsAdmin
+                          adminRights={i}
+                          port={port}
+                          token={token}
+                          setData={setData}
+                        />
                       </td>
                       <td>
                         <Fragment>
                           {/**Confirmation de la suppression */}
-
-                          <Button.Group align="center">
-                            <Button
-                              onClick={deleteAction}
-                              color="danger"
-                              outlined
-                              size="small"
-                            >
-                              Supprimer
-                            </Button>
-                            {isDeleteUser ? (
-                              <div
-                                className={
-                                  isDeleteUser ? "modal is-active" : "modal"
-                                }
-                              >
-                                <div className="modal-background"></div>
-                                <div className="modal-content">
-                                  <div className="modal-card">
-                                    <header className="modal-card-head">
-                                      <p className="modal-card-title">
-                                        Suppression du compte #{i.id}
-                                      </p>
-                                    </header>
-                                    <section className="modal-card-body">
-                                      <p>
-                                        Cette action est irréversible. La
-                                        suppression de votre compte entrainera
-                                        la perte définitive de vos données.
-                                        Êtes-vous sûr de vouloir continuer ?
-                                      </p>
-                                    </section>
-                                    <footer className="modal-card-foot">
-                                      <button
-                                        onClick={handleDelete}
-                                        className="button is-danger"
-                                      >
-                                        Supprimer
-                                      </button>
-                                      <button
-                                        onClick={deleteAction}
-                                        className="button"
-                                      >
-                                        Annuler
-                                      </button>
-                                    </footer>
-                                  </div>
-                                </div>
-                              </div>
-                            ) : null}
-                          </Button.Group>
+                          <Modal
+                            modal={i}
+                            port={port}
+                            token={token}
+                            setData={setData}
+                          />
                         </Fragment>
                       </td>
                     </tr>
