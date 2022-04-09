@@ -9,10 +9,9 @@ import "../../utils/moment";
 import { port } from "../../port";
 import DeletePost from "./DeletePost";
 import CreatePost from "./CreatePost";
-export default function Posts() {
+export default function Posts({ userConnected, token }) {
   //States + localstorage
-  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
-  const token = `Bearer ${userConnected.token}`;
+
   const [data, setData] = useState([]);
   //Récupération des posts
   useEffect(() => {

@@ -6,10 +6,9 @@ import { port } from "../../port";
 import { Link } from "react-router-dom";
 import Modal from "./ModalDeleteAdmin";
 import IsAdmin from "./IsAdmin";
-export default function Admin() {
+export default function Admin({ token }) {
   //Localstorage + states
-  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
-  const token = `Bearer ${userConnected.token}`;
+
   const [data, setData] = useState({});
 
   //Récupérations des users

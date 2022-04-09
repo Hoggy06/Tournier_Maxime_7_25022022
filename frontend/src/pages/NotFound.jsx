@@ -5,6 +5,7 @@ import Footer from "../components/Base/Footer";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Columns, Message } from "react-bulma-components";
 export default function PageNotFound() {
+  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   //Corps de la page 404
   return (
     <Fragment>
@@ -13,7 +14,7 @@ export default function PageNotFound() {
           <title>Error 404</title>
         </Helmet>
       </HelmetProvider>
-      <Nav />
+      <Nav userConnected={userConnected} />
       <Columns.Column
         mobile={{ size: 12 }}
         tablet={{ size: 8, offset: 2 }}

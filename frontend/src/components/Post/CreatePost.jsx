@@ -2,7 +2,7 @@ import { Form, Button, Media } from "react-bulma-components";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { Fragment, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-export default function CreatePost({ token, port, setData, userConnected }) {
+export default function CreatePost({ token, port, setData }) {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState("");
   const onMessageChange = (e) => setMessage(e.target.value);

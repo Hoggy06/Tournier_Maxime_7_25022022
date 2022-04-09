@@ -7,8 +7,9 @@ import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Columns, Message } from "react-bulma-components";
 import Admin from "../components/Admin/Admin";
 
-export default function Feeds() {
+export default function AdminPage() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
+  const token = `Bearer ${userConnected.token}`;
   //Corps de la page Admin
   return (
     <Fragment>
@@ -17,7 +18,7 @@ export default function Feeds() {
           <title>Feeds</title>
         </Helmet>
       </HelmetProvider>
-      <Nav />
+      <Nav userConnected={userConnected} />
       {userConnected && userConnected.isAdmin === true ? (
         <Fragment>
           <Columns.Column
@@ -25,7 +26,7 @@ export default function Feeds() {
             tablet={{ size: 8, offset: 2 }}
             desktop={{ size: 6, offset: 3 }}
           >
-            <Admin />
+            <Admin token={token} />
           </Columns.Column>
         </Fragment>
       ) : (

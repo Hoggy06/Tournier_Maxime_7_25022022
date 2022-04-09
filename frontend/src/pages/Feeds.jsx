@@ -9,6 +9,7 @@ import { Columns, Message } from "react-bulma-components";
 //Corps de la pge Feeds
 export default function Feeds() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
+  const token = `Bearer ${userConnected.token}`;
   return (
     <Fragment>
       <HelmetProvider>
@@ -16,7 +17,7 @@ export default function Feeds() {
           <title>Feeds</title>
         </Helmet>
       </HelmetProvider>
-      <Nav />
+      <Nav userConnected={userConnected} />
       {userConnected ? (
         <Fragment>
           <Columns.Column
@@ -24,7 +25,7 @@ export default function Feeds() {
             tablet={{ size: 8, offset: 2 }}
             desktop={{ size: 6, offset: 3 }}
           >
-            <Posts />
+            <Posts userConnected={userConnected} token={token} />
           </Columns.Column>
         </Fragment>
       ) : (

@@ -9,6 +9,8 @@ import Comments from "../components/Comments/Comments";
 import { useParams } from "react-router-dom";
 import { Columns } from "react-bulma-components";
 export default function Publication() {
+  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
+  const token = `Bearer ${userConnected.token}`;
   //Corps de la page des publications
   const { id } = useParams();
   return (
@@ -18,13 +20,13 @@ export default function Publication() {
           <title>Post #{id}</title>
         </Helmet>
       </HelmetProvider>
-      <Nav />
+      <Nav userConnected={userConnected} />
       <Columns.Column
         mobile={{ size: 12 }}
         tablet={{ size: 8, offset: 2 }}
         desktop={{ size: 6, offset: 3 }}
       >
-        <OnePost />
+        <OnePost userConnected={userConnected} token={token} />
         <Comments />
       </Columns.Column>
 

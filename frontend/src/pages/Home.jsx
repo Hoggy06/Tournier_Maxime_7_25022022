@@ -9,6 +9,7 @@ import { Columns, Image } from "react-bulma-components";
 import Logo from "../assets/images/icon-above-font.svg";
 //Corps de la page Home
 export default function Home() {
+  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
   return (
     <Fragment>
       <HelmetProvider>
@@ -16,7 +17,7 @@ export default function Home() {
           <title>Home</title>
         </Helmet>
       </HelmetProvider>
-      <Nav />
+      <Nav userConnected={userConnected} />
       <Columns.Column
         mobile={{ size: 12 }}
         tablet={{ size: 8, offset: 2 }}

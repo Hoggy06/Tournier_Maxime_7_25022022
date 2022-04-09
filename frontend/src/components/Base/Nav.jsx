@@ -5,8 +5,7 @@ import Logo from "../../assets/images/icon-left-font-monochrome-white.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
-export default function Nav() {
-  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
+export default function Nav({ userConnected }) {
   //Burger pour la navigation sur mobile et tablette
   const [burger, setBurger] = useState(false);
   //Fonction de deconnexion

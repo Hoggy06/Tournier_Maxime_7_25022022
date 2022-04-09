@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import { Columns } from "react-bulma-components";
 
 export default function OneComment() {
+  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
+  const token = `Bearer ${userConnected.token}`;
   //Corps de la page de l'édition des commentaires
   const { id, idPost } = useParams();
   return (
@@ -20,13 +22,13 @@ export default function OneComment() {
           </title>
         </Helmet>
       </HelmetProvider>
-      <Nav />
+      <Nav userConnected={userConnected} />
       <Columns.Column
         mobile={{ size: 12 }}
         tablet={{ size: 8, offset: 2 }}
         desktop={{ size: 6, offset: 3 }}
       >
-        <UpdateComment />
+        <UpdateComment userConnected={userConnected} token={token} />
       </Columns.Column>
 
       <Footer />

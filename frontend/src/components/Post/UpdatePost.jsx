@@ -17,10 +17,9 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { port } from "../../port";
 
-export default function UpdatePost() {
+export default function UpdatePost({ userConnected, token }) {
   //States + localstorage
-  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
-  const token = `Bearer ${userConnected.token}`;
+
   const [message, setMessage] = useState("");
   const [image, setImage] = useState("");
   const onMessageChange = (e) => setMessage(e.target.value);

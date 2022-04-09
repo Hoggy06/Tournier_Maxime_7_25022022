@@ -22,10 +22,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { port } from "../../port";
 import DeleteAccount from "./DeleteAccount";
-export default function Comments() {
+export default function User({ userConnected, token }) {
   //Localstorage + states
-  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
-  const token = `Bearer ${userConnected.token}`;
+
   const [data, setData] = useState({});
   const { id } = useParams();
   const [firstname, setFirstname] = useState("");

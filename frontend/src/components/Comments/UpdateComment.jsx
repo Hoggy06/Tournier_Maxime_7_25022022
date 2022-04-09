@@ -15,10 +15,8 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { port } from "../../port";
 
-export default function UpdateComment() {
+export default function UpdateComment({ userConnected, token }) {
   //States + localstorage
-  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
-  const token = `Bearer ${userConnected.token}`;
   const [message, setMessage] = useState("");
   const onMessageChange = (e) => setMessage(e.target.value);
   const [error, setError] = useState("");

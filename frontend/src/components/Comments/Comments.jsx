@@ -8,10 +8,9 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { port } from "../../port";
 import DeleteComment from "./DeleteComment";
 import CreateComment from "./CreateComment";
-export default function Comments() {
+export default function Comments({ userConnected, token }) {
   //States + localstorage
-  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
-  const token = `Bearer ${userConnected.token}`;
+
   const { id } = useParams();
   const [data, setData] = useState([]);
   moment.locale("fr");

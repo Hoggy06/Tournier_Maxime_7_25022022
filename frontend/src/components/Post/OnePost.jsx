@@ -7,9 +7,7 @@ import { Media, Image, Box, Content } from "react-bulma-components";
 import moment from "moment";
 import { port } from "../../port";
 //import LikePost from "./LikePost";
-export default function OnePost() {
-  const userConnected = JSON.parse(localStorage.getItem("userConnected"));
-  const token = `Bearer ${userConnected.token}`;
+export default function OnePost({ userConnected, token }) {
   const [data, setData] = useState({});
   //const [deletePost, setDeletePost] = useState(false);
   const { id } = useParams();
