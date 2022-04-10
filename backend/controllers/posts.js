@@ -41,8 +41,10 @@ exports.getAllPosts = (req, res, next) => {
   //Jointure des tables Users et Posts
   Posts.belongsTo(Users);
   Likes.belongsTo(Posts);
+  Comments.belongsTo(Posts);
   Users.hasMany(Posts);
   Posts.hasMany(Likes);
+  Posts.hasMany(Comments);
   //Utilisation des datas Posts et Users
   const options = {
     order: [["id", "DESC"]],
@@ -54,6 +56,9 @@ exports.getAllPosts = (req, res, next) => {
       },
       {
         model: Likes,
+      },
+      {
+        model: Comments,
       },
     ],
   };
@@ -102,6 +107,7 @@ exports.editPost = (req, res, next) => {
       if (post.userId !== req.auth.userId) {
         return res.status(403).json({ error: "Accès non autorisé" });
       }
+
       //Si ajout d'un fichier
       const postObject = req.file
         ? {
@@ -111,6 +117,7 @@ exports.editPost = (req, res, next) => {
             }`,
           }
         : { ...req.body };
+
       //Maj du post
       post
         .update({ ...postObject, id: req.params.id })
@@ -150,4 +157,23 @@ exports.deletePost = (req, res, next) => {
       });
     })
     .catch((error) => res.status(400).json({ error }));
+};
+
+exports.deletePostImage = (req, res, next) => {
+  Posts.findOne({ where: { id: req.params.id } })
+    .then((post) => {
+      if (post.userId !== req.auth.userId && req.auth.isAdmin === false) {
+        return res.status(403).json({ error: "Accès non autorisé" });
+      }
+
+      const filename = post.image.split("/images/")[1];
+      fs.unlink(`images/${filename}`, () => {
+        //Suppression du post
+        post.update({ image: null });
+        res.status(200).json({ message: "Image supprimée" });
+      });
+    })
+    .catch(() => {
+      res.status(404).json({ error: "Post non trouvé" });
+    });
 };
