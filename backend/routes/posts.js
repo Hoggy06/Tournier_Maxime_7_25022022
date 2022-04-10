@@ -13,6 +13,7 @@ router.get("/", auth, postsCtrl.getAllPosts);
 router.get("/:id", auth, postsCtrl.getOnePost);
 router.put("/:id", auth, multer, postsCtrl.editPost);
 router.delete("/:id", auth, postsCtrl.deletePost);
+router.delete("/:id/img", auth, postsCtrl.deletePostImage);
 
 router.post("/:postId/comment", auth, commentsCtrl.createComment);
 router.get("/:postId/comment/:id", auth, commentsCtrl.getOneComment);
