@@ -10312,3 +10312,7 @@ fieldset[disabled] .file-name {
 .pJustify {
   text-align: justify;
 }
+
+.pWhiteSpaces {
+  white-space: pre-line;
+}
