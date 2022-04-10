@@ -97,10 +97,14 @@ exports.getOnePost = (req, res, next) => {
   };
   Posts.findOne(options)
     .then((post) => {
+      if (!post) {
+        return res.status(404).json({ error: "Post non trouvé" });
+      }
       res.status(200).json(post);
     })
+
     .catch(() => {
-      res.status(404).json({ error: "Post non trouvé" });
+      return res.status(404).json({ error: "Post non trouvé" });
     });
 };
 
