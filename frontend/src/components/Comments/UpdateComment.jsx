@@ -7,7 +7,6 @@ import {
   Box,
   Image,
   Content,
-  Message,
   Heading,
 } from "react-bulma-components";
 import { useParams } from "react-router-dom";
@@ -121,12 +120,7 @@ export default function UpdateComment({ userConnected, token }) {
           </Box>
         </Fragment>
       ) : (
-        <Message color="danger">
-          <Message.Header>
-            <span>Erreur</span>
-          </Message.Header>
-          <Message.Body>Accès non autorisé</Message.Body>
-        </Message>
+        navigate(`/post/${idPost}`)
       )}
     </Fragment>
   );
