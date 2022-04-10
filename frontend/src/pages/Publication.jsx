@@ -21,13 +21,14 @@ export default function Publication() {
         </Helmet>
       </HelmetProvider>
       <Nav userConnected={userConnected} />
+
       <Columns.Column
         mobile={{ size: 12 }}
         tablet={{ size: 8, offset: 2 }}
         desktop={{ size: 6, offset: 3 }}
       >
         <OnePost userConnected={userConnected} token={token} />
-        <Comments />
+        <Comments userConnected={userConnected} token={token} />
       </Columns.Column>
 
       <Footer />
