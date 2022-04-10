@@ -12,14 +12,14 @@ export default function CreateComment({
   //Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = { message };
+    const formData = { message };
     const options = {
       method: "POST",
       headers: {
         Authorization: token,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(formData),
     };
 
     fetch(`http://localhost:${port}/api/posts/${id}/comment`, options)
@@ -52,7 +52,6 @@ export default function CreateComment({
                 onChange={onMessageChange}
                 name="message"
                 required
-                disabled={!userConnected}
               ></Form.Textarea>
               <Form.Field>
                 <Form.Control>
