@@ -28,7 +28,12 @@ export default function OneComment() {
         tablet={{ size: 8, offset: 2 }}
         desktop={{ size: 6, offset: 3 }}
       >
-        <UpdateComment userConnected={userConnected} token={token} />
+        <UpdateComment
+          userConnected={userConnected}
+          token={token}
+          id={id}
+          idPost={idPost}
+        />
       </Columns.Column>
 
       <Footer />
