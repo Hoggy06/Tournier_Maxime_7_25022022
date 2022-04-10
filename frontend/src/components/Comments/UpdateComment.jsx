@@ -10,7 +10,7 @@ import {
   Heading,
   Message,
 } from "react-bulma-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import moment from "moment";
 import { port } from "../../port";
 import { HashLink } from "react-router-hash-link";
@@ -155,7 +155,7 @@ export default function UpdateComment({ userConnected, token, id, idPost }) {
           </Box>
         </Fragment>
       ) : (
-        navigate(`/403`)
+        <Link to={`/403`} />
       )}
     </Fragment>
   );

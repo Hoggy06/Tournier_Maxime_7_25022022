@@ -204,7 +204,7 @@ export default function UpdatePost({ userConnected, token, id }) {
           </Box>{" "}
         </Fragment>
       ) : (
-        navigate("/403")
+        <Link to={"/403"} />
       )}
     </Fragment>
   );
