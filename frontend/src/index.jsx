@@ -12,6 +12,7 @@ import UpdateOnePost from "./pages/UpdateOnePost";
 import UpdateOneComment from "./pages/UpdateOneComment";
 import Profil from "./pages/Profil";
 import Admin from "./pages/Admin";
+import Forbidden from "./pages/Forbidden";
 //Routes
 ReactDOM.render(
   <React.StrictMode>
@@ -28,7 +29,8 @@ ReactDOM.render(
           path="/editComment/:id/post/:idPost"
           element={<UpdateOneComment />}
         />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/404" element={<NotFound />} />
+        <Route path="/403" element={<Forbidden />} />
       </Routes>
     </Router>
   </React.StrictMode>,
