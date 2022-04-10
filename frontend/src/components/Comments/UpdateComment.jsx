@@ -69,95 +69,94 @@ export default function UpdateComment({ userConnected, token, id, idPost }) {
   //Affichage du commentaire + formulaire
   return (
     <Fragment>
-      {
-        userConnected.userId === data.userId ? (
-          <Fragment>
-            {success && deleteMessage ? (
-              <Message color="success">
-                <Message.Header>
-                  <span>Succès</span>
-                  <Button onClick={deleteAlertMessage} remove />
-                </Message.Header>
-                <Message.Body>
-                  {success}
-                  <p>
-                    Vous pouvez consulter votre publication
-                    <HashLink to={`/post/${idPost}#${id}`}>
-                      <b> ici</b>
-                    </HashLink>
-                  </p>
-                </Message.Body>
-              </Message>
-            ) : null}
-            {error && deleteMessage ? (
-              <Message color="danger">
-                <Message.Header>
-                  <span>Erreur</span>
-                  <Button onClick={deleteAlertMessage} remove />
-                </Message.Header>
-                <Message.Body>{error}</Message.Body>
-              </Message>
-            ) : null}
-            <Box>
-              <Heading size={6}>Edition du commentaire</Heading>
-              <Media>
-                <Media.Item renderAs="article" align="left">
-                  {data.User && (
-                    <Image size={64} alt="64x64" src={data.User.image} />
-                  )}
-                </Media.Item>
-                <Media.Item>
-                  <Content className="pJustify">
-                    {data.User && <b>{data.User.firstname}</b>}{" "}
-                    <small>
-                      - {moment(data.created).startOf("YYYYMMDD").fromNow()}
-                    </small>
-                    <br />
-                    {data.message}
-                  </Content>
+      {userConnected.userId === data.userId ? (
+        <Fragment>
+          {success && deleteMessage ? (
+            <Message color="success">
+              <Message.Header>
+                <span>Succès</span>
+                <Button onClick={deleteAlertMessage} remove />
+              </Message.Header>
+              <Message.Body>
+                {success}
+                <p>
+                  Vous pouvez consulter votre publication
+                  <HashLink to={`/post/${idPost}#${id}`}>
+                    <b> ici</b>
+                  </HashLink>
+                </p>
+              </Message.Body>
+            </Message>
+          ) : null}
+          {error && deleteMessage ? (
+            <Message color="danger">
+              <Message.Header>
+                <span>Erreur</span>
+                <Button onClick={deleteAlertMessage} remove />
+              </Message.Header>
+              <Message.Body>{error}</Message.Body>
+            </Message>
+          ) : null}
+          <Box>
+            <Heading size={6}>Edition du commentaire</Heading>
+            <Media>
+              <Media.Item renderAs="article" align="left">
+                {data.User && (
+                  <Image size={64} alt="64x64" src={data.User.image} />
+                )}
+              </Media.Item>
+              <Media.Item>
+                <Content className="pJustify">
+                  {data.User && <b>{data.User.firstname}</b>}{" "}
+                  <small>
+                    - {moment(data.created).startOf("YYYYMMDD").fromNow()}
+                  </small>
+                  <br />
+                  {data.message}
+                </Content>
+              </Media.Item>
+            </Media>
+          </Box>
+          <Box>
+            <form onSubmit={handleSubmit}>
+              <Media renderAs="article">
+                <Media.Item align="center">
+                  <Form.Field>
+                    <Form.Control>
+                      <Form.Textarea
+                        className="textarea"
+                        size="medium"
+                        type="text"
+                        placeholder={`Que voulez vous dire ?`}
+                        defaultValue={data.message}
+                        onChange={onMessageChange}
+                        name="message"
+                        required
+                        disabled={!userConnected}
+                      />
+                    </Form.Control>
+                  </Form.Field>
+                  <Form.Field>
+                    <Form.Control>
+                      <Button
+                        color="link"
+                        disabled={!userConnected || !message}
+                      >
+                        Editer
+                      </Button>
+                    </Form.Control>
+                  </Form.Field>
                 </Media.Item>
               </Media>
-            </Box>
-            <Box>
-              <form onSubmit={handleSubmit}>
-                <Media renderAs="article">
-                  <Media.Item align="center">
-                    <Form.Field>
-                      <Form.Control>
-                        <Form.Textarea
-                          className="textarea"
-                          size="medium"
-                          type="text"
-                          placeholder={`Que voulez vous dire ?`}
-                          defaultValue={data.message}
-                          onChange={onMessageChange}
-                          name="message"
-                          required
-                          disabled={!userConnected}
-                        />
-                      </Form.Control>
-                    </Form.Field>
-                    <Form.Field>
-                      <Form.Control>
-                        <Button
-                          color="link"
-                          disabled={!userConnected || !message}
-                        >
-                          Editer
-                        </Button>
-                      </Form.Control>
-                    </Form.Field>
-                  </Media.Item>
-                </Media>
-              </form>
-              <Form.Help align="center" textSize="6" color="danger">
-                {error}
-              </Form.Help>
-            </Box>
-          </Fragment>
-        ) : null
-        //navigate(`/post/${idPost}`)
-      }
+            </form>
+            <Form.Help align="center" textSize="6" color="danger">
+              {error}
+            </Form.Help>
+          </Box>
+        </Fragment>
+      ) : (
+        navigate(`/403`)
+      )}
     </Fragment>
   );
 }

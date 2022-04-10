@@ -1,34 +1,32 @@
 //Importations
-import "../styles/App.css";
+import { Fragment } from "react";
 import Nav from "../components/Base/Nav";
 import Footer from "../components/Base/Footer";
-import { Fragment } from "react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
-import OnePost from "../components/Post/OnePost";
-import { useParams } from "react-router-dom";
-import { Columns } from "react-bulma-components";
-export default function Publication() {
+import { Columns, Message } from "react-bulma-components";
+export default function Forbidden() {
   const userConnected = JSON.parse(localStorage.getItem("userConnected"));
-  const token = `Bearer ${userConnected.token}`;
-  //Corps de la page des publications
-  const { id } = useParams();
+  //Corps de la page 404
   return (
     <Fragment>
       <HelmetProvider>
         <Helmet>
-          <title>Post #{id}</title>
+          <title>Error 404</title>
         </Helmet>
       </HelmetProvider>
       <Nav userConnected={userConnected} />
-
       <Columns.Column
         mobile={{ size: 12 }}
         tablet={{ size: 8, offset: 2 }}
         desktop={{ size: 6, offset: 3 }}
       >
-        <OnePost userConnected={userConnected} token={token} />
+        <Message color="danger">
+          <Message.Header>
+            <span>Erreur</span>
+          </Message.Header>
+          <Message.Body>Accès non autorisé</Message.Body>
+        </Message>
       </Columns.Column>
-
       <Footer />
     </Fragment>
   );

@@ -45,9 +45,12 @@ export default function UpdatePost({ userConnected, token, id }) {
       .then((response) => response.json())
       .then((res) => {
         setData(res);
+        if (res.error) {
+          setError(res.error);
+        }
       })
       .catch((error) => console.log(error));
-  }, [id, token, userConnected]);
+  }, [id, token, userConnected, navigate]);
 
   //Soumission du formulaire
   const handleSubmit = (e) => {
@@ -87,123 +90,122 @@ export default function UpdatePost({ userConnected, token, id }) {
 
   return (
     <Fragment>
-      {
-        userConnected.userId === data.userId ? (
-          <Fragment>
-            {success && deleteMessage ? (
-              <Message color="success">
-                <Message.Header>
-                  <span>Succès</span>
-                  <Button onClick={deleteAlertMessage} remove />
-                </Message.Header>
-                <Message.Body>
-                  {success}
-                  <p>
-                    Vous pouvez consulter votre publication
-                    <Link to={`/post/${id}`}>
-                      <b> ici</b>
-                    </Link>
-                  </p>
-                </Message.Body>
-              </Message>
-            ) : null}
-            {error && deleteMessage ? (
-              <Message color="danger">
-                <Message.Header>
-                  <span>Erreur</span>
-                  <Button onClick={deleteAlertMessage} remove />
-                </Message.Header>
-                <Message.Body>{error}</Message.Body>
-              </Message>
-            ) : null}{" "}
-            <Box>
-              <Heading size={6}>Edition du post</Heading>
-              <Media>
-                <Media.Item renderAs="article" align="left">
-                  {data.User && (
-                    <Image size={64} alt="64x64" src={data.User.image} />
-                  )}
-                </Media.Item>
-                <Media.Item>
-                  <Content className="pJustify">
-                    {data.User && <b>{data.User.firstname}</b>}{" "}
-                    <small>
-                      - {moment(data.created).startOf("YYYYMMDD").fromNow()}
-                    </small>
-                    <br />
-                    {data.message}
-                    <br />
-                    {data.image ? (
-                      <img src={data.image} alt={`${data.image}`} />
-                    ) : null}
-                  </Content>
+      {userConnected.userId === data.userId ? (
+        <Fragment>
+          {success && deleteMessage ? (
+            <Message color="success">
+              <Message.Header>
+                <span>Succès</span>
+                <Button onClick={deleteAlertMessage} remove />
+              </Message.Header>
+              <Message.Body>
+                {success}
+                <p>
+                  Vous pouvez consulter votre publication
+                  <Link to={`/post/${id}`}>
+                    <b> ici</b>
+                  </Link>
+                </p>
+              </Message.Body>
+            </Message>
+          ) : null}
+          {error && deleteMessage ? (
+            <Message color="danger">
+              <Message.Header>
+                <span>Erreur</span>
+                <Button onClick={deleteAlertMessage} remove />
+              </Message.Header>
+              <Message.Body>{error}</Message.Body>
+            </Message>
+          ) : null}{" "}
+          <Box>
+            <Heading size={6}>Edition du post</Heading>
+            <Media>
+              <Media.Item renderAs="article" align="left">
+                {data.User && (
+                  <Image size={64} alt="64x64" src={data.User.image} />
+                )}
+              </Media.Item>
+              <Media.Item>
+                <Content className="pJustify">
+                  {data.User && <b>{data.User.firstname}</b>}{" "}
+                  <small>
+                    - {moment(data.created).startOf("YYYYMMDD").fromNow()}
+                  </small>
+                  <br />
+                  {data.message}
+                  <br />
+                  {data.image ? (
+                    <img src={data.image} alt={`${data.image}`} />
+                  ) : null}
+                </Content>
+              </Media.Item>
+            </Media>
+          </Box>
+          <Box>
+            {/**Formulaire pour l'édition */}
+            <form onSubmit={handleSubmit}>
+              <Media renderAs="article">
+                <Media.Item align="center">
+                  <Form.Field>
+                    <Form.Control>
+                      <Form.Textarea
+                        className="textarea"
+                        size="medium"
+                        type="text"
+                        placeholder={`Que voulez vous dire ?`}
+                        defaultValue={data.message}
+                        onChange={onMessageChange}
+                        name="message"
+                        required
+                        disabled={!userConnected}
+                      />
+                    </Form.Control>
+                  </Form.Field>
+                  <Form.Field>
+                    <Form.Control>
+                      <Form.InputFile
+                        color="link"
+                        type="file"
+                        onChange={onImageChange}
+                        name="image"
+                        filename={image.name}
+                        icon={<FontAwesomeIcon icon={faUpload} />}
+                        label="Modifier l'image"
+                      />
+                    </Form.Control>
+                  </Form.Field>
+                  <Form.Field>
+                    <Form.Control>
+                      <Button
+                        color="link"
+                        disabled={!userConnected || !message}
+                      >
+                        Editer
+                      </Button>
+                    </Form.Control>
+                  </Form.Field>
                 </Media.Item>
               </Media>
-            </Box>
-            <Box>
-              {/**Formulaire pour l'édition */}
-              <form onSubmit={handleSubmit}>
-                <Media renderAs="article">
-                  <Media.Item align="center">
-                    <Form.Field>
-                      <Form.Control>
-                        <Form.Textarea
-                          className="textarea"
-                          size="medium"
-                          type="text"
-                          placeholder={`Que voulez vous dire ?`}
-                          defaultValue={data.message}
-                          onChange={onMessageChange}
-                          name="message"
-                          required
-                          disabled={!userConnected}
-                        />
-                      </Form.Control>
-                    </Form.Field>
-                    <Form.Field>
-                      <Form.Control>
-                        <Form.InputFile
-                          color="link"
-                          type="file"
-                          onChange={onImageChange}
-                          name="image"
-                          filename={image.name}
-                          icon={<FontAwesomeIcon icon={faUpload} />}
-                          label="Modifier l'image"
-                        />
-                      </Form.Control>
-                    </Form.Field>
-                    <Form.Field>
-                      <Form.Control>
-                        <Button
-                          color="link"
-                          disabled={!userConnected || !message}
-                        >
-                          Editer
-                        </Button>
-                      </Form.Control>
-                    </Form.Field>
-                  </Media.Item>
-                </Media>
-              </form>
-              <DeleteImage
-                token={token}
-                port={port}
-                setData={setData}
-                id={id}
-                navigate={navigate}
-                setError={setError}
-                setSuccess={setSuccess}
-                image={image}
-                data={data}
-                setDeleteMessage={setDeleteMessage}
-                deleteMessage={deleteMessage}
-              />
-            </Box>{" "}
-          </Fragment>
-        ) : null
-        //navigate(`/post/${id}`)
-      }
+            </form>
+            <DeleteImage
+              token={token}
+              port={port}
+              setData={setData}
+              id={id}
+              navigate={navigate}
+              setError={setError}
+              setSuccess={setSuccess}
+              image={image}
+              data={data}
+              setDeleteMessage={setDeleteMessage}
+              deleteMessage={deleteMessage}
+            />
+          </Box>{" "}
+        </Fragment>
+      ) : (
+        navigate("/403")
+      )}
     </Fragment>
   );
 }
