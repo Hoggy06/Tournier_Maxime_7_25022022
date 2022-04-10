@@ -10,7 +10,6 @@ import DeleteComment from "./DeleteComment";
 import CreateComment from "./CreateComment";
 export default function Comments({ userConnected, token }) {
   //States + localstorage
-
   const { id } = useParams();
   const [data, setData] = useState([]);
   moment.locale("fr");
@@ -60,7 +59,7 @@ export default function Comments({ userConnected, token }) {
                     - {moment(i.created).startOf("YYYYMMDD").fromNow()}
                   </small>
                   <br />
-                  {i.message}
+                  <p className="pWhiteSpaces">{i.message}</p>
                   <nav className="level is-mobile">
                     <div className="level-left">
                       {userConnected.userId === i.userId ? (
