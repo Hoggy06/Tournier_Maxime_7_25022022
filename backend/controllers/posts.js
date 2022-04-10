@@ -77,6 +77,8 @@ exports.getOnePost = (req, res, next) => {
   Likes.belongsTo(Posts);
   Users.hasMany(Posts);
   Posts.hasMany(Likes);
+  Comments.belongsTo(Posts);
+  Posts.hasMany(Comments);
 
   //Utilisation des datas Posts et Users
   const options = {
@@ -88,6 +90,9 @@ exports.getOnePost = (req, res, next) => {
         attributes: ["firstname", "image"],
       },
       { model: Likes, attributes: ["id", "userId"] },
+      {
+        model: Comments,
+      },
     ],
   };
   Posts.findOne(options)
