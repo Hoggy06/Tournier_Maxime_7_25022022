@@ -25,7 +25,7 @@ export default function OnePost() {
         tablet={{ size: 8, offset: 2 }}
         desktop={{ size: 6, offset: 3 }}
       >
-        <UpdatePost userConnected={userConnected} token={token} />
+        <UpdatePost userConnected={userConnected} token={token} id={id} />
       </Columns.Column>
 
       <Footer />
