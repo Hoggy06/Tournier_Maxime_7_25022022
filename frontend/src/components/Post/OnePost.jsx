@@ -6,10 +6,10 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Media, Image, Box, Content } from "react-bulma-components";
 import moment from "moment";
 import { port } from "../../port";
-//import LikePost from "./LikePost";
+
 export default function OnePost({ userConnected, token }) {
   const [data, setData] = useState({});
-  //const [deletePost, setDeletePost] = useState(false);
+
   const { id } = useParams();
   //Récupération d'un post
   useEffect(() => {
@@ -21,9 +21,11 @@ export default function OnePost({ userConnected, token }) {
       },
     })
       .then((response) => response.json())
-      .then((data) => setData(data))
+      .then((data) => {
+        setData(data);
+      })
       .catch((error) => console.log(error));
-  }, [id, token]);
+  }, [id, token]); //eslint-disable-line
   //Affichage d'un post
   return (
     <Box>
@@ -49,16 +51,15 @@ export default function OnePost({ userConnected, token }) {
             ) : null}
             <nav className="level is-mobile">
               <div className="level-left">
-                {/*<LikePost idPost={data.id} />*/}
                 {userConnected.userId === data.userId ? (
-                  <Link className="level-item" to={`/editPost/${data.id}`}>
-                    <span
-                      data-tooltip="Editer"
-                      className="icon is-small level-item has-tooltip-bottom"
-                    >
+                  <span
+                    data-tooltip="Editer"
+                    className="icon is-small level-item has-tooltip-bottom"
+                  >
+                    <Link className="level-item" to={`/editPost/${data.id}`}>
                       <FontAwesomeIcon icon={faPen} />
-                    </span>
-                  </Link>
+                    </Link>
+                  </span>
                 ) : null}
               </div>
             </nav>
