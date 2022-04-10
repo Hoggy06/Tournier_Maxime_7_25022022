@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Media, Form, Button } from "react-bulma-components";
-export default function CreateComment({
-  token,
-  port,
-  userConnected,
-  setData,
-  id,
-}) {
+export default function CreateComment({ token, port, setData, id }) {
   const [message, setMessage] = useState("");
   const onMessageChange = (e) => setMessage(e.target.value);
   //Soumission du formulaire
@@ -33,7 +27,10 @@ export default function CreateComment({
           },
         })
           .then((response) => response.json())
-          .then((data) => setData(data))
+          .then((data) => {
+            setData(data);
+          })
+
           .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
