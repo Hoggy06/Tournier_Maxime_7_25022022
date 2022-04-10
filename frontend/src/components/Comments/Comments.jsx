@@ -43,7 +43,7 @@ export default function Comments({ userConnected, token }) {
       {data.map((i, index) => {
         //Affichage des commentaires
         return (
-          <Box key={index}>
+          <Box key={index} id={`${i.id}`}>
             <Media>
               <Media.Item renderAs="article" align="left">
                 {i.User && (
