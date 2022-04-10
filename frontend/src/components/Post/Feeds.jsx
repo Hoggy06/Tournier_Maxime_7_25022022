@@ -57,7 +57,7 @@ export default function Posts({ userConnected, token }) {
                     - {moment(i.created).startOf("YYYYMMDD").fromNow()}
                   </small>
                   <br />
-                  {i.message}
+                  <p className="pWhiteSpaces">{i.message}</p>
                   <br />
                   {i.image ? <Image src={i.image} alt={`${i.image}`} /> : null}
                   <nav className="level is-mobile">
@@ -69,6 +69,7 @@ export default function Posts({ userConnected, token }) {
                         >
                           <FontAwesomeIcon icon={faComment} />
                         </span>
+                        <span>{i.Comments && i.Comments.length}</span>
                       </Link>
                       {/*<LikePost idPost={i.id} idLike={i.Likes.id} />*/}
                       {userConnected.userId === i.userId ? (
