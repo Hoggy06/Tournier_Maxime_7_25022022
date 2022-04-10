@@ -50,3 +50,7 @@ Puis `npm start` pour lancer l'`API`.
 
 - Le ou la chargé-e de communication Groupomania doit pouvoir modérer les interactions entre
   salariés
+
+  ## Documentation
+
+  La documentation de l'API est disponible à [cette adresse](https://documenter.getpostman.com/view/1788084/UVyswFd5).
