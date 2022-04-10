@@ -42,7 +42,7 @@ export default function OnePost({ userConnected, token }) {
               - {moment(data.created).startOf("YYYYMMDD").fromNow()}
             </small>
             <br />
-            {data.message}
+            <p className="pWhiteSpaces">{data.message}</p>
             <br />
             {data.image ? (
               <Image src={data.image} alt={`${data.image}`} />
