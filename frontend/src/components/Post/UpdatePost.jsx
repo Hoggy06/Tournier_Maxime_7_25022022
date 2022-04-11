@@ -157,7 +157,6 @@ export default function UpdatePost({ userConnected, token, id }) {
                         defaultValue={data.message}
                         onChange={onMessageChange}
                         name="message"
-                        required
                         disabled={!userConnected}
                       />
                     </Form.Control>
@@ -177,10 +176,7 @@ export default function UpdatePost({ userConnected, token, id }) {
                   </Form.Field>
                   <Form.Field>
                     <Form.Control>
-                      <Button
-                        color="link"
-                        disabled={!userConnected || !message}
-                      >
+                      <Button color="link" disabled={!image && !message}>
                         Editer
                       </Button>
                     </Form.Control>
