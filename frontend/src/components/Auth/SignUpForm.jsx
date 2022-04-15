@@ -215,8 +215,7 @@ export default function SignUpForm() {
           </Message.Header>
           <Message.Body>{success}</Message.Body>
         </Message>
-      ) : null}
-      {error && deleteMessage ? (
+      ) : error && deleteMessage ? (
         <Message color="danger">
           <Message.Header>
             <span>Erreur</span>
